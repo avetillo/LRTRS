@@ -2,262 +2,307 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRT 2 Map View</title>
-    <link rel="stylesheet" href="styles/styles1.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        #map {
-            width: 70%;
-            height: 90vh;
-            margin-left: 20px;
-            margin-top: 5%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LRT 2 Map View</title>
+
+  <link rel="stylesheet" href="styles/styles1.css">
+
+  <!-- Leaflet & Leaflet Routing Machine CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+  <style>
+    #map {
+      width: 70%;
+      height: 90vh;
+      margin-left: 20px;
+      margin-top: 5%;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="header">
-        <a href="index.html">
-             <img class="logo" src="graphics/logo-header.png" alt="Logo" id="logo">
-        </a>
-        <ul>
-            <i class="fas fa-train" style="color: white;"></i>
-            <li><a href="LRT1.html">LRT LINE 1</a></li>
+  <!-- HEADER -->
+  <div class="header">
+    <a href="index.html">
+      <img class="logo" src="graphics/logo-header.png" alt="Logo" id="logo">
+    </a>
+    <ul>
+      <i class="fas fa-train" style="color: white;"></i>
+      <li><a href="LRT1.html">LRT LINE 1</a></li>
+      <i class="fas fa-train" style="color: white;"></i>
+      <li><ab href="LRT2.html">LRT LINE 2</ab></li>
+    </ul>
+  </div>
 
-            <i class="fas fa-train" style="color: white;"></i>
-            <li><ab href="LRT2.html">LRT LINE 2</ab></li>
-        </ul>
+  <h1>LRT 2 ROUTE MAP</h1>
+
+  <!-- STATUS DROPDOWN -->
+  <div class="dropdown-container">
+    <select id="status">
+      <option value="0">Status</option>
+      <option value="1">Onboarding</option>
+      <option value="2">In Transit</option>
+      <option value="3">Arriving</option>
+      <option value="4">Under Maintenance</option>
+      <option value="5">Emergency Stop</option>
+    </select>
+  </div>
+
+  <!-- CURRENT STATION -->
+  <div class="dropdown-station-from">
+    <select id="station_from">
+      <option value="0">Current Station</option>
+      <option value="1">Recto</option>
+      <option value="2">Legarda</option>
+      <option value="3">Pureza</option>
+      <option value="4">V. Mapa</option>
+      <option value="5">J. Ruiz</option>
+      <option value="6">Gilmore</option>
+      <option value="7">Betty Go-Belmonte</option>
+      <option value="8">Cubao</option>
+      <option value="9">Anonas</option>
+      <option value="10">Katipunan</option>
+      <option value="11">Santolan</option>
+      <option value="12">Marikina-Pasig</option>
+      <option value="13">Antipolo</option>
+    </select>
+  </div>
+
+  <!-- DESTINATION STATION -->
+  <div class="dropdown-station-to">
+    <select id="station_to">
+      <option value="0">Destination Station</option>
+      <option value="1">Recto</option>
+      <option value="2">Legarda</option>
+      <option value="3">Pureza</option>
+      <option value="4">V. Mapa</option>
+      <option value="5">J. Ruiz</option>
+      <option value="6">Gilmore</option>
+      <option value="7">Betty Go-Belmonte</option>
+      <option value="8">Cubao</option>
+      <option value="9">Anonas</option>
+      <option value="10">Katipunan</option>
+      <option value="11">Santolan</option>
+      <option value="12">Marikina-Pasig</option>
+      <option value="13">Antipolo</option>
+    </select>
+  </div>
+
+  <!-- ACCORDION -->
+  <div class="accordion-container">
+    <button class="accordion">Status Details</button>
+    <div class="panel">
+      <p>Est Time of Completion :</p>
+      <p>Train ID :</p>
+      <p>Details: </p>
     </div>
+  </div>
 
-    <h1>LRT 2 ROUTE MAP</h1>
-    <div class="dropdown-container">
-        <select id="status">
-            <option value="0">Status</option>
-            <option value="1">Onboarding</option>
-            <option value="2">In Transit</option>
-            <option value="3">Arriving</option>
-            <option value="4">Under Maintenance</option>
-            <option value="5">Emergency Stop</option>
-        </select>
-    </div>
+  <!-- MAP -->
+  <div id="map"></div>
 
-    <div class="dropdown-station-from">
-        <select id="station_from">
-            <option value="0">Current Station</option>
-            <option value="1">Recto</option>
-            <option value="2">Legarda</option>
-            <option value="3">Pureza</option>
-            <option value="4">V. Mapa</option>
-            <option value="5">J. Ruiz</option>
-            <option value="6">Gilmore</option>
-            <option value="7">Betty Go-Belmonte</option>
-            <option value="8">Cubao</option>
-            <option value="9">Anonas</option>
-            <option value="10">Katipunan</option>
-            <option value="11">Santolan</option>
-            <option value="12">Marikina-Pasig</option>
-            <option value="13">Antipolo</option>
-        </select>
-    </div>
+  <!-- Leaflet & LRM Scripts -->
+  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
-    <div class="dropdown-station-to">
-        <select id="station_to">
-            <option value="0">Destination Station</option>
-            <option value="1">Recto</option>
-            <option value="2">Legarda</option>
-            <option value="3">Pureza</option>
-            <option value="4">V. Mapa</option>
-            <option value="5">J. Ruiz</option>
-            <option value="6">Gilmore</option>
-            <option value="7">Betty Go-Belmonte</option>
-            <option value="8">Cubao</option>
-            <option value="9">Anonas</option>
-            <option value="10">Katipunan</option>
-            <option value="11">Santolan</option>
-            <option value="12">Marikina-Pasig</option>
-            <option value="13">Antipolo</option>
-        </select>
-    </div>
-
-    <div class="accordion-container">
-        <button class="accordion">Status Details</button>
-        <div class="panel">
-            <p>Est Time of Completion :</p>
-            <p>Train ID :</p>
-            <p>Details: </p>
-        </div>
-    </div>
-
-    
-
-    <div id="map"></div>
-
-    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-
-    <script>
-        // Accordion toggle functionality
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
-                }
-            });
+  <script>
+    // Accordion Functionality
+    var acc = document.getElementsByClassName("accordion");
+    for (var i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "block";
         }
-
-
-         // Initialize the map
-         var map = L.map('map').setView([14.5898, 120.9814], 13);
-
-        // Add the OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
-            maxZoom: 18
-        }).addTo(map);
-
-        // Define a custom icon for the train stations
-        var trainStationIcon = L.icon({
-            iconUrl: 'graphics/train-station.png', 
-            iconSize: [32, 32], 
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-        });
-
-        // Define the train station locations
-        var trainStations = [
-            { name: 'Recto', coordinates: [14.603523749575908, 120.98355536668444] },
-            { name: 'Legarda', coordinates: [14.600866401813708, 120.99257584654309] },
-            { name: 'Pureza', coordinates: [14.601761023215898, 121.00522612060541] },
-            { name: 'V. Mapa', coordinates: [14.604127775307445, 121.01720548492453] },
-            { name: 'J. Ruiz', coordinates: [14.610709314239692, 121.02620839459375] },
-            { name: 'Gilmore', coordinates: [14.613779947826389, 121.03422913877083] },
-            { name: 'Betty Go-Belmonte', coordinates: [14.618526233772084, 121.04271408061948] },
-            { name: 'Cubao', coordinates: [14.622761948731455, 121.05259758282531] },
-            { name: 'Anonas', coordinates: [14.628031938772514, 121.06467453097706] },
-            { name: 'Katipunan', coordinates: [14.631115349832555, 121.0725304965648] },
-            { name: 'Santolan', coordinates: [14.622634836379207, 121.08577593223578] },
-            { name: 'Marikina-Pasig', coordinates: [14.62042623132183, 121.1002720967416] },
-            { name: 'Antipolo', coordinates: [14.624951378644008, 121.12143178275615] }
-        ];
-
-        // Add markers and draw the polyline
-        var stationCoordinates = [];
-        trainStations.forEach(station => {
-            L.marker(station.coordinates, { icon: trainStationIcon })
-                .addTo(map)
-                .bindPopup(`<b>${station.name}</b>`);
-
-            stationCoordinates.push(station.coordinates);
-        });
-
-        // Draw a polyline connecting the train stations
-        var trainRoute = L.polyline(stationCoordinates, { color: 'red', weight: 4 }).addTo(map);
-
-        // Fit the map to the bounds of the route
-        map.fitBounds(trainRoute.getBounds());
-
-
-// Create an array of coordinates for the route
-         stationCoordinates = trainStations.map(station => station.coordinates);
-
-        // Function to create custom marker icon
-        function createCustomMarkerIcon(url) {
-            return L.icon({
-                iconUrl: url,
-                iconSize: [64, 32],
-                iconAnchor: [16, 32],
-                popupAnchor: [0, -32]
-            });
-        }
-
-        // Function to animate marker along the route
-        function animateMarkerAlongRoute(route) {
-                var markers = [];
-                var trainData = [];
-
-        // Create moving markers and initialize their data
-        for (var i = 0; i < 9; i++) {
-            var marker = L.marker(route[i % route.length], { icon: createCustomMarkerIcon('graphics/train.png') }).addTo(map);
-            markers.push(marker);
-            trainData.push({
-                currentIndex: i,       // Starting station index
-                direction: 'forward'  // Initial direction
-            });
-        }
-
-        function moveAlongPath() {
-            markers.forEach((marker, trainIndex) => {
-                var train = trainData[trainIndex];
-                var currentStation = route[train.currentIndex];
-                var nextIndex;
-
-            // Determine the next station based on direction
-            if (train.direction === 'forward') {
-                nextIndex = train.currentIndex + 1;
-                if (nextIndex >= route.length) {
-                    train.direction = 'backward';
-                    nextIndex = route.length - 2; // Move back to the second-to-last station
-                }
-            } else {
-                nextIndex = train.currentIndex - 1;
-                if (nextIndex < 0) {
-                    train.direction = 'forward';
-                    nextIndex = 1; // Move forward to the second station
-                }
-            }
-
-            var nextStation = route[nextIndex];
-            var fromLatLng = L.latLng(currentStation);
-            var toLatLng = L.latLng(nextStation);
-
-            var duration = 2000; // Duration of movement between two points in ms
-            var startTime = null;
-
-            // Function to update the position of the marker during the animation
-            function animateMarkerStep(timestamp) {
-                if (!startTime) startTime = timestamp;
-                var progress = (timestamp - startTime) / duration;
-
-                if (progress < 1) {
-                        var lat = fromLatLng.lat + (toLatLng.lat - fromLatLng.lat) * progress;
-                        var lng = fromLatLng.lng + (toLatLng.lng - fromLatLng.lng) * progress;
-                        marker.setLatLng([lat, lng]);
-                        map.setView([lat, lng], 14); // Adjust map view to follow marker
-
-                        requestAnimationFrame(animateMarkerStep); // Continue the animation
-                    } else {
-                        marker.setLatLng(toLatLng); // Final position
-                        train.currentIndex = nextIndex; // Update train's current index
-                    }
-                }
-
-                requestAnimationFrame(animateMarkerStep); // Start the animation for this marker
-           });
-
-            // Restart the animation with a slight delay before moving again
-            setTimeout(moveAlongPath, 5000); // Wait for 5 seconds before moving again
-        }
-
-        moveAlongPath(); // Start the animation process
+      });
     }
 
+    // Initialize the map
+    var map = L.map('map').setView([14.5898, 120.9814], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(map);
 
-        // Start the marker animation along the route
-        animateMarkerAlongRoute(stationCoordinates);
+    // Stations and routes
+    var trainStationIcon = L.icon({
+      iconUrl: 'graphics/train-station.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
 
+    var trainStations = [
+      { name: 'Recto', coordinates: [14.603523749575908, 120.98355536668444] },
+      { name: 'Legarda', coordinates: [14.600866401813708, 120.99257584654309] },
+      { name: 'Pureza', coordinates: [14.601761023215898, 121.00522612060541] },
+      { name: 'V. Mapa', coordinates: [14.604127775307445, 121.01720548492453] },
+      { name: 'J. Ruiz', coordinates: [14.610709314239692, 121.02620839459375] },
+      { name: 'Gilmore', coordinates: [14.613779947826389, 121.03422913877083] },
+      { name: 'Betty Go-Belmonte', coordinates: [14.618526233772084, 121.04271408061948] },
+      { name: 'Cubao', coordinates: [14.622761948731455, 121.05259758282531] },
+      { name: 'Anonas', coordinates: [14.628031938772514, 121.06467453097706] },
+      { name: 'Katipunan', coordinates: [14.631115349832555, 121.0725304965648] },
+      { name: 'Santolan', coordinates: [14.622634836379207, 121.08577593223578] },
+      { name: 'Marikina-Pasig', coordinates: [14.62042623132183, 121.1002720967416] },
+      { name: 'Antipolo', coordinates: [14.624951378644008, 121.12143178275615] }
+    ];
 
-            </script>
+    // Add station markers
+    var stationCoordinates = [];
+    trainStations.forEach(function(station) {
+      L.marker(station.coordinates, { icon: trainStationIcon })
+        .addTo(map)
+        .bindPopup('<b>' + station.name + '</b>');
+      stationCoordinates.push(station.coordinates);
+    });
+
+    // Draw a red polyline for the entire route
+    var trainRoute = L.polyline(stationCoordinates, { color: 'red', weight: 4 }).addTo(map);
+    map.fitBounds(trainRoute.getBounds());
+
+    // Simulation + stop 
+    var trainIcon = L.icon({
+      iconUrl: 'graphics/train.png',
+      iconSize: [64, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
+
+    var NUM_TRAINS = 8;
+
+    // 10-second speed ignoring stops
+    function distance(a, b) {
+      var dx = b[0] - a[0];
+      var dy = b[1] - a[1];
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // Calculate total distance from station 0->last
+    var totalDist = 0;
+    for (var i = 0; i < stationCoordinates.length - 1; i++) {
+      totalDist += distance(stationCoordinates[i], stationCoordinates[i + 1]);
+    }
+
+    // speedPerFrame = totalDist / 600
+    var framesForOneLoop = 60 * 10; // 600 frames for 10s
+    var speedPerFrame = totalDist / framesForOneLoop; 
+    var TRAIN_SPEED = speedPerFrame;
+
+    var STOP_DURATION = 3000; // 3 seconds
+
+    // Create 8 trains
+    var trains = [];
+    for (var t = 0; t < NUM_TRAINS; t++) {
+      // Each train starts at a different station index
+      var initialIndex = t; 
+      if (initialIndex >= stationCoordinates.length) {
+        initialIndex = 0;
+      }
+
+      var marker = L.marker(stationCoordinates[initialIndex], { icon: trainIcon })
+        .addTo(map)
+        .bindPopup('Train #' + (t + 1));
+
+      trains.push({
+        marker: marker,
+        currentIndex: initialIndex,
+        nextIndex: (initialIndex + 1),
+        progress: 0,
+        direction: 1, // move forward in the array
+        isStopped: false,
+        stopUntil: 0
+      });
+    }
+
+    function animateTrains(timestamp) {
+      trains.forEach(function(train) {
+
+        // If train is currently stopped, check if stopUntil is reached
+        if (train.isStopped) {
+          if (timestamp < train.stopUntil) {
+            // still waiting
+            return;
+          } else {
+            // done waiting
+            train.isStopped = false;
+            // proceed to next station
+          }
+        }
+
+        var currentCoords = stationCoordinates[train.currentIndex];
+        var nextCoords = stationCoordinates[train.nextIndex];
+        var distSegment = distance(currentCoords, nextCoords);
+
+        // Move the train along the segment if not arrived
+        train.progress += TRAIN_SPEED / distSegment;
+
+        if (train.progress >= 1) {
+          // Reached next station
+          train.currentIndex = train.nextIndex;
+          train.progress = 0;
+
+          // If at final station, loop or bounce
+          if (train.currentIndex >= stationCoordinates.length - 1 && train.direction === 1) {
+            // Loop to Recto instantly:
+            train.currentIndex = 0;
+            train.nextIndex = 1;
+
+          } else if (train.currentIndex <= 0 && train.direction === -1) {
+            // Bounce back to Legarda instantly:
+            train.currentIndex = stationCoordinates.length - 1;
+            train.nextIndex = train.currentIndex - 1;
+
+          } else {
+            // Continue to next station in same direction
+            train.nextIndex = train.currentIndex + train.direction;
+          }
+
+          // Arrived at the station
+          train.isStopped = true;
+          // Stop
+          train.stopUntil = timestamp + STOP_DURATION;
+
+        } else {
+          // Still traveling => compute interpolation
+          var lat = currentCoords[0] + (nextCoords[0] - currentCoords[0]) * train.progress;
+          var lng = currentCoords[1] + (nextCoords[1] - currentCoords[1]) * train.progress;
+          train.marker.setLatLng([lat, lng]);
+        }
+      });
+
+      requestAnimationFrame(animateTrains);
+    }
+    requestAnimationFrame(animateTrains);
+
+    // FSM
+    var statusSelect = document.getElementById('status');
+    var speedPerFrameBackup = speedPerFrame; // Keep a backup to restore speed
+
+    statusSelect.addEventListener('change', function() {
+      var statusValue = parseInt(this.value);
+      // Possible scenario: If "Under Maintenance" or "Emergency Stop", set speed to 0 => all trains pause
+      if (statusValue === 4) {
+        // Under Maintenance
+        TRAIN_SPEED = 0;
+      } else if (statusValue === 5) {
+        // Emergency Stop
+        TRAIN_SPEED = 0;
+      } else if (statusValue === 2) {
+        // In Transit => restore normal speed
+        TRAIN_SPEED = speedPerFrameBackup;
+      } else {
+        // Onboarding, Arriving, or default => revert to normal
+        TRAIN_SPEED = speedPerFrameBackup;
+      }
+    });
+  </script>
 </body>
-
 </html>
