@@ -170,7 +170,7 @@
 
 
 // Create an array of coordinates for the route
-         stationCoordinates = trainStations.map(station => station.coordinates);
+        var stationCoordinates = trainStations.map(station => station.coordinates);
 
         // Function to create custom marker icon
         function createCustomMarkerIcon(url) {
@@ -184,36 +184,59 @@
 
         // Function to animate marker along the route
         function animateMarkerAlongRoute(route) {
-                var markers = [];
-                var trainData = [];
+            var markers = [];
+            var index = 0;
 
-        // Create moving markers and initialize their data
-        for (var i = 0; i < 8; i++) {
-            var marker = L.marker(route[i % route.length], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
-            markers.push(marker);
-            trainData.push({
-                currentIndex: i,       // Starting station index
-                        var lat = fromLatLng.lat + (toLatLng.lat - fromLatLng.lat) * progress;
-                        var lng = fromLatLng.lng + (toLatLng.lng - fromLatLng.lng) * progress;
-                        marker.setLatLng([lat, lng]);
-                      //  map.setView([lat, lng], 14); // Adjust map view to follow marker
+            // Create 9 moving markers, each starting from a different station
+            for (var i = 0; i < 9; i++) {
+                var marker = L.marker(route[i % route.length], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
+                markers.push(marker);
+            }
 
-                        requestAnimationFrame(animateMarkerStep); // Continue the animation
-                    } else {
-                        marker.setLatLng(toLatLng); // Final position
-                        train.currentIndex = nextIndex; // Update train's current index
+            function moveAlongPath() {
+                markers.forEach((movingMarker, markerIndex) => {
+                    var currentStation = route[(index + markerIndex) % route.length];
+                    var nextStation = route[(index + markerIndex + 1) % route.length];
+
+                    var fromLatLng = L.latLng(currentStation);
+                    var toLatLng = L.latLng(nextStation);
+
+                    var duration = 2000; // Duration of movement between two points in ms
+                    var startTime = null;
+
+                    // Function to update the position of the marker during the animation
+                    function animateMarkerStep(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        var progress = (timestamp - startTime) / duration;
+
+                        if (progress < 1) {
+                            var lat = fromLatLng.lat + (toLatLng.lat - fromLatLng.lat) * progress;
+                            var lng = fromLatLng.lng + (toLatLng.lng - fromLatLng.lng) * progress;
+                            movingMarker.setLatLng([lat, lng]);
+                            //map.setView([lat, lng], 14); // Adjust map view to follow marker
+
+                            requestAnimationFrame(animateMarkerStep); // Continue the animation
+                        } else {
+                            movingMarker.setLatLng(toLatLng); // Final position
+                        }
                     }
+
+                    requestAnimationFrame(animateMarkerStep); // Start the animation for this marker
+                });
+
+                index++; // Move to the next station
+
+                // If the index goes beyond the last station, reset to the start (but without looping back)
+                if (index >= route.length) {
+                    index = 0;
                 }
 
-                requestAnimationFrame(animateMarkerStep); // Start the animation for this marker
-           });
+                // Restart the animation with a slight delay before moving again
+                setTimeout(moveAlongPath, 5000); // Wait for 5 seconds before moving again
+            }
 
-            // Restart the animation with a slight delay before moving again
-            setTimeout(moveAlongPath, 5000); // Wait for 5 seconds before moving again
+            moveAlongPath(); // Start the animation process
         }
-
-        moveAlongPath(); // Start the animation process
-    }
 
         // Start the marker animation along the route
         animateMarkerAlongRoute(stationCoordinates);
