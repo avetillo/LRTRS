@@ -17,5 +17,3 @@ document.getElementById('details')?.addEventListener('click', function() {
 document.getElementById('facebook')?.addEventListener('click', function() {
     window.location.href = 'https://www.facebook.com/OfficialLRTA';
 });
-
-

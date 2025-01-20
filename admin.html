@@ -1,36 +1,62 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRT-RS</title>
     <link rel="stylesheet" href="styles/styles2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    
 </head>
 <body>
     <div class="container">
         <div class="logo">
             <img src="graphics/logo.png" alt="logo" class="logo">
         </div>
-        <h1>ADMIN LOGIN</h1>
+
+        <div class="h1-group">
+            <a href="index.html">
+                <i class="fa-solid fa-circle-chevron-left"></i>
+            </a>
+            <h1>ADMIN LOGIN</h1>
+        </div>
+
         <div class="content">
             <div class="form">
-                <form>
+                <form id="loginForm"> <!-- Added ID to the form -->
                     <div class="input-group">
+                        <i class="fa fa-envelope"></i>
                         <input type="email" id="email" name="email" placeholder="Email Address" required>
                     </div>
                     <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
                         <input type="password" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" id="login">LOGIN</button>
                     </div>
                 </form>
             </div>
-            <div class="form-buttons">
-                <button type="submit" id="login">LOGIN</button>
-            </div>
         </div>
     </div>
-    <script src="javascript/scripts.js"></script>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Get the values of email and password
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Check if the email and password match the predefined values
+            if (email === "lrtrs.admin@gmail.com" && password === "admin") {
+                alert("Login successful!");
+                window.location.href = "AdminLRT1.html"; // Redirect to AdminLRT1.html
+            } else {
+                alert("Invalid email or password. Please try again.");
+            }
+        });
+    </script>
 </body>
 </html>

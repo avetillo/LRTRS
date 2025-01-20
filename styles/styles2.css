@@ -1,3 +1,4 @@
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -142,25 +143,62 @@ footer {
 }
 
 .form-buttons {
-    width: 146%;
+    width: 140%;
     align-content: center;
     margin-top: 100px;
     left: 2%;
-}
-
-.form-buttons button {
-    background-color: #232D3F;
-    color: white;
-    padding: 10px 30px;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    width: 100%;
-    transition: background-color 0.3s;
-}
-
-.form-buttons button:hover {
+@ -164,3 +164,54 @@ footer {
     background-color: #26457C;
 }
 
+
+.input-group {
+    position: relative;
+}
+
+.input-group input {
+    width: 146%;
+    padding: 10px 10px 10px 40px;
+    font-size: 16px;
+}
+
+.input-group .fa-envelope {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #232D3F;
+    font-size: 18px;
+    padding-bottom: 15px;
+}
+
+.input-group .fa-lock {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #232D3F;
+    font-size: 18px;
+    padding-bottom: 15px;
+}
+
+.h1-group .fa-circle-chevron-left {
+    position: absolute;
+    top: 30%;
+    left: 70%;
+    color: #232D3F;
+    font-size: 18px;
+    padding-bottom: 15px;
+}
+
+.h1-group {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adds space between the icon and the text */
+}
+
+.h1-group .fa-solid {
+    color: #232D3F;
+    font-size: 24px; /* Adjust the size as needed */
+    cursor: pointer; /* Optional: Changes cursor to pointer for better UX */
+}

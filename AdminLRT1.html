@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRT 1 Map View</title>
+    <link rel="stylesheet" href="styles/styles3.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        #map {
+            width: 70%;
+            height: 90vh;
+            margin-left: 20px;
+            margin-top: 5%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="index.html">
+             <img class="logo" src="graphics/logo-header.png" alt="Logo" id="logo">
+        </a>
+        <ul>
+            <i class="fas fa-train" style="color: white;"></i>
+            <li><ab href="AdminLRT1.html">LRT LINE 1</ab></li>
+
+            <i class="fas fa-train" style="color: white;"></i>
+            <li><a href="AdminLRT2.html">LRT LINE 2</a></li>
+        </ul>
+    </div>
+
+    <h1>LRT 1 ROUTE MAP</h1>
+    <div class="dropdown-container">
+        <select id="status">
+            <option value="0">Status</option>
+            <option value="1">Onboarding</option>
+            <option value="2">In Transit</option>
+            <option value="3">Arriving</option>
+            <option value="4">Under Maintenance</option>
+            <option value="5">Emergency Stop</option>
+        </select>
+    </div>
+
+    <div class="dropdown-station">
+        <select id="station">
+            <option value="0">Train Station </option>
+            <option value="1">Fernando Poe Jr.</option>
+            <option value="2">Balintawak</option>
+            <option value="3">Monumento</option>
+            <option value="4">5th Avenue</option>
+            <option value="5">R. Papa</option>
+            <option value="6">Abad Santos</option>
+            <option value="7">Blumentritt</option>
+            <option value="8">Tayuman</option>
+            <option value="9">Bambang</option>
+            <option value="10">Doroteo Jose</option>
+            <option value="11">Carriedo</option>
+            <option value="12">Central Terminal</option>
+            <option value="13">UN Avenue</option>
+            <option value="14">Pedro Gil</option>
+            <option value="15">Quirino</option>
+            <option value="16">Vito Cruz</option>
+            <option value="17">Gil Puyat</option>
+            <option value="18">Libertad</option>
+            <option value="19">EDSA</option>
+            <option value="20">Baclaran</option>
+            <option value="21">Redemptorist</option>
+            <option value="22">MIA</option>
+            <option value="23">PITX</option>
+            <option value="24">Ninoy Aquino</option>
+            <option value="25">Dr. Santos</option>
+        </select>
+    </div>
+
+    <div class="dropdown-train">
+        <select id="trains">
+            <option value="0">Train ID</option>
+            <option value="1">Train 001</option>
+            <option value="2">Train 002</option>
+            <option value="3">Train 003</option>
+            <option value="4">Train 004</option>
+            <option value="5">Train 005</option>
+            <option value="6">Train 006</option>
+            <option value="7">Train 007</option>
+            <option value="8">Train 008</option>
+            <option value="9">Train 009</option>
+            <option value="10">Train 010</option>
+            <option value="11">Train 011</option>
+            <option value="12">Train 012</option>
+            <option value="13">Train 013</option>
+            <option value="14">Train 014</option>
+            <option value="15">Train 015</option>
+            <option value="16">Train 016</option>
+            <option value="17">Train 017</option>
+            <option value="18">Train 018</option>
+            <option value="19">Train 019</option>
+            <option value="20">Train 020</option>
+            <option value="21">Train 021</option>
+            <option value="22">Train 022</option>
+            <option value="23">Train 023</option>
+            <option value="24">Train 024</option>
+            <option value="25">Train 025</option>
+            <option value="26">Train 026</option>
+            <option value="27">Train 027</option>
+            <option value="28">Train 028</option>
+            <option value="29">Train 029</option>
+            <option value="30">Train 030</option>
+        </select>
+    </div>
+
+    <div class="accordion-container">
+        <button class="accordion">Status Details</button>
+        <div class="panel">
+            <p>Est Time of Completion :</p>
+            <p>Train ID :</p>
+            <p>Details: </p>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([14.5898, 120.9814], 13);
+
+        // Add the OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+            maxZoom: 18
+        }).addTo(map);
+
+        // Define a custom icon for the train stations
+        var trainStationIcon = L.icon({
+            iconUrl: 'graphics/train-station.png', 
+            iconSize: [32, 32], 
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+        });
+
+        // Define the train station locations
+        var trainStations = [
+            { name: 'Fernando Poe Jr.', coordinates: [14.657564369471404, 121.02120610745072] },
+            { name: 'Balintawak', coordinates: [14.65750147145765, 121.00422054654594] },
+            { name: 'Monumento', coordinates: [14.6543704937643, 120.98394652823895] },
+            { name: '5th Avenue', coordinates: [14.644443386279871, 120.983692294063] },
+            { name: 'R. Papa', coordinates: [14.636183579019688, 120.98232641711178] },
+            { name: 'Abad Santos', coordinates: [14.63066835424686, 120.9813951791116] },
+            { name: 'Blumentritt', coordinates: [14.622621960901801, 120.98288990509053] },
+            { name: 'Tayuman', coordinates: [14.616600984282133, 120.98287732781642] },
+            { name: 'Bambang', coordinates: [14.611409630037802, 120.98245685454071] },
+            { name: 'Doroteo Jose', coordinates: [14.605637350114652, 120.98206863602151] },
+            { name: 'Carriedo', coordinates: [14.599304196601272, 120.98133329293051] },
+            { name: 'Central Terminal', coordinates: [14.592931326230659, 120.98166828258216] },
+            { name: 'UN Avenue', coordinates: [14.582624466668593, 120.9846632701908] },
+            { name: 'Pedro Gil', coordinates: [14.576399400319339, 120.98816708687828] },
+            { name: 'Quirino', coordinates: [14.569977636356853, 120.99163022440858] },
+            { name: 'Vito Cruz', coordinates: [14.563422280213553, 120.99484788316302] },
+            { name: 'Gil Puyat', coordinates: [14.55482852228614, 120.99693376619075] },
+            { name: 'Libertad', coordinates: [14.548266853151796, 120.99863460827746] },
+            { name: 'EDSA', coordinates: [14.539448535965198, 121.00064195125523] },
+            { name: 'Baclaran', coordinates: [14.534256598361095, 120.9983556421991] },
+            { name: 'Redemptorist', coordinates: [14.530347599735821, 120.99316581732481] },
+            { name: 'MIA', coordinates: [14.518714388003874, 120.99289597765204] },
+            { name: 'PITX', coordinates: [14.509302074860603, 120.99301525852232] },
+            { name: 'Ninoy Aquino', coordinates: [14.499081395968531, 120.99443219828665] },
+            { name: 'Dr Santos', coordinates: [14.48574205636304, 120.98946756415296] },
+
+        ];
+
+        // Add markers and draw the polyline
+        var stationCoordinates = [];
+        trainStations.forEach(station => {
+            L.marker(station.coordinates, { icon: trainStationIcon })
+                .addTo(map)
+                .bindPopup(`<b>${station.name}</b>`);
+
+            stationCoordinates.push(station.coordinates);
+        });
+
+        // Draw a polyline connecting the train stations
+        var trainRoute = L.polyline(stationCoordinates, { color: 'red', weight: 4 }).addTo(map);
+
+        // Fit the map to the bounds of the route
+        map.fitBounds(trainRoute.getBounds());
+
+         // Accordion toggle functionality
+         var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

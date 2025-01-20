@@ -188,8 +188,6 @@
                 var trainData = [];
 
         // Create moving markers and initialize their data
-        for (var i = 0; i < 9; i++) {
-            var marker = L.marker(route[i % route.length], { icon: createCustomMarkerIcon('graphics/train.png') }).addTo(map);
         for (var i = 0; i < 8; i++) {
             var marker = L.marker(route[i % route.length], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
             markers.push(marker);
@@ -198,7 +196,6 @@
                         var lat = fromLatLng.lat + (toLatLng.lat - fromLatLng.lat) * progress;
                         var lng = fromLatLng.lng + (toLatLng.lng - fromLatLng.lng) * progress;
                         marker.setLatLng([lat, lng]);
-                        map.setView([lat, lng], 14); // Adjust map view to follow marker
                       //  map.setView([lat, lng], 14); // Adjust map view to follow marker
 
                         requestAnimationFrame(animateMarkerStep); // Continue the animation

@@ -1,0 +1,251 @@
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #232D3F;
+        }
+
+        h1 {
+            color: white;
+            font-weight: bold; 
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding: 5px;
+            position: absolute; 
+            right: 6.5%;
+            top: 25%; 
+            
+        }
+        
+        .info-container {
+            display: block;
+            padding: 10px;
+            box-sizing: border-box;
+            width: 55vh;
+            float: right;
+            position: absolute;
+            top: 32%;
+            right: 30px;
+        }
+        
+        .info-box {
+            background-color: white;
+            color: #0C2C39;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-container {
+            margin-top: 10px;
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .save-container {
+            margin-top: 10px;
+            text-align: right;
+            padding-left: 10px;
+            top: 70vh;
+            right: 30px;
+            position: absolute;
+        }
+
+        .btn {
+            background-color: white;
+            color: #0C2C39;
+            border: none;
+            padding: 2vh 3vh;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #F6BC2D;
+            color: white;
+        }
+
+        .header {
+            background-color: #26457C;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 5px 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        ul {
+            list-style-type: none;
+            margin-right: 5%;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        ul li {
+            display: inline;
+            margin-right: 1px;
+        }
+
+        ul li a,
+        ul li ab {
+            text-decoration: none; /* Removes underline */
+            color: white; /* Text color */
+            font-size: 16px; /* Font size */
+            font-weight: bold; /* Font weight */
+            border-bottom: 2px solid transparent; /* Adds a line effect without box */
+            transition: border-color 0.3s ease; /* Smooth transition for hover effect */
+            padding: 20px;
+            margin-right: 10px;
+            margin: 5px;
+        }
+        
+        ul li ab {
+            border-bottom: 2px solid white;
+        }
+
+        ul li a:hover {
+            border-bottom: 3px solid white;
+        }
+
+        .logo {
+            width: 250px;
+            height: auto;
+            margin-right: 15px;
+        }
+
+        .search-container {
+            position: absolute;
+            top: 20%;
+            right: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            color: #0C2C39;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 30px;
+            width: 50vh;
+            z-index: 1000;
+        }
+        
+        .search-container button {
+            padding: 10px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #0C2C39;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 12vh;
+            
+        }
+        
+        .search-container input[type="text"] {
+            width: 33vh;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        
+        .search-container button:hover {
+            background-color: whitesmoke;
+            font-weight: bold;
+            color: #0C2C39;
+        }
+
+
+        .dropdown-container {
+            position: absolute;
+            top: 40%;
+            left: 85%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: 3px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            width: 250px;
+        }
+
+        .dropdown-station {
+            position: absolute;
+            top: 50%;
+            left: 85%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .dropdown-train {
+            position: absolute;
+            top: 60%;
+            left: 85%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+
+
+         /* Accordion container */
+         .accordion-container {
+            position: absolute;
+            top: 82%;
+            left: 85%;
+            transform: translate(-50%, -50%);
+            text-align: left;
+            width: 19.5%; 
+        }
+
+        /* Accordion button */
+        .accordion {
+            font-family: Arial;
+            background-color: #eee;
+            color: #232D3F;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%; /* Full width of the container */
+            border: none;
+            text-align: center;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+            font-weight: bold;
+        }
+
+        /* Style when the accordion is active or hovered */
+        .active, .accordion:hover {
+            background-color: #26457C; 
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Panel content (hidden by default) */
+        .panel {
+            font-family: Arial;
+            padding: 0 18px;
+            display: none;
+            background-color: white;
+            overflow: hidden;
+        }
+
+
+
