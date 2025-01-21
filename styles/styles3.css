@@ -52,24 +52,6 @@
             position: absolute;
         }
 
-        .btn {
-            background-color: white;
-            color: #0C2C39;
-            border: none;
-            padding: 2vh 3vh;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #F6BC2D;
-            color: white;
-        }
-
         .header {
             background-color: #26457C;
             position: fixed;
@@ -125,46 +107,6 @@
             width: 250px;
             height: auto;
             margin-right: 15px;
-        }
-
-        .search-container {
-            position: absolute;
-            top: 20%;
-            right: 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: white;
-            color: #0C2C39;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 30px;
-            width: 50vh;
-            z-index: 1000;
-        }
-        
-        .search-container button {
-            padding: 10px 10px;
-            font-size: 14px;
-            cursor: pointer;
-            background-color: #0C2C39;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            width: 12vh;
-            
-        }
-        
-        .search-container input[type="text"] {
-            width: 33vh;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        
-        .search-container button:hover {
-            background-color: whitesmoke;
-            font-weight: bold;
-            color: #0C2C39;
         }
 
 
