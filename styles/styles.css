@@ -30,12 +30,12 @@ body {
 h1 {
     color: #232D3F;
     font-weight: bold; 
-    font-size: 24px;
+    font-size: 28px;
     margin-bottom: 20px;
     padding: 5px;
     position: absolute; 
-    right: 10.5%;
-    top: 30%; 
+    right: 6%;
+    top: 35%; 
     
 }
 
@@ -45,7 +45,7 @@ h1 {
     align-items: flex-end; 
     justify-content: flex-start; 
     position: absolute;
-    right: 8%;
+    right: 4.4%;
     top: 50%; 
     transform: translateY(-50%); 
 }
@@ -77,8 +77,8 @@ footer {
     margin-bottom: 20px;
     padding: 5px;
     position: absolute; 
-    right: 18%;
-    top: 60%; 
+    right: 13.7%;
+    top: 58%; 
 }
 
 .footer-bold {
@@ -88,8 +88,8 @@ footer {
     margin-bottom: 20px;
     padding: 5px;
     position: absolute; 
-    right: 12.5%;
-    top: 60%; 
+    right: 9.2%;
+    top: 58%; 
     text-decoration: underline;
 }
 
