@@ -205,6 +205,112 @@
 
 
 
+        .input-group {
+            position: relative;
+        }
         
+        .input-group input {
+            width: 146%;
+            padding: 10px 10px 10px 40px;
+            font-size: 16px;
+        }
+        
+        .input-group .fa-clock {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #232D3F;
+            font-size: 18px;
+            padding-bottom: 15px;
+        }
+        
+        .input-group .fa-pen {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #232D3F;
+            font-size: 18px;
+            padding-bottom: 13px;
+        }
+        
+        .h1-group {
+            display: flex;
+            align-items: center;
+            gap: 10px; 
+        }
+        
+        .h1-group .fa-solid {
+            color: #232D3F;
+            font-size: 24px; 
+            cursor: pointer; 
+        }
 
+        .form {
+            width: 100%;
+            max-width: 171px;
+            color: white;
+            text-align: left;
+            margin-left: 75.2%;
+            margin-top: 25%;
+        }
+        
+        .form input {
+            font-family: Arial;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            padding-left: 50px;
+            border: 3px solid #ccc;
+            font-size: 13px;
+            box-sizing: border-box;
+            margin-right: 8%;
+        }
+        
+        .form-buttons {
+            width: 140%;
+            align-content: center;
+            margin-top: 100px;
+            left: 10px;
+        }
+
+        .content {
+            color: #232D3F;
+            font-weight: normal; 
+            font-size: 15px;
+            margin-bottom: 20px;
+            padding: 5px;
+            position: absolute; 
+            right: 21%;
+            top: 47.5%; 
+        }
+
+        .form-buttons {
+            width: 140%;
+            align-content: center;
+            margin-top: 10px;
+            left: 10px;
+        }
+        
+        .buttons button, .nav-button, .form-buttons button {
+            background-color: #03C03C;
+            color: #232D3F;
+            border: none;
+            padding: 10px 30px;
+            font-size: 13px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+            box-sizing: border-box;
+            width: 245px;
+        }
+
+        .buttons button:hover, .nav-button:hover, .form-buttons button:hover {
+            background-color: #26457C;
+            color: white;
+        }
+        
 

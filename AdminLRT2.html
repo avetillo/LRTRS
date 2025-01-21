@@ -33,7 +33,7 @@
         </ul>
     </div>
 
-    <h1>ADMIN LRT 1 MAP</h1>
+    <h1>ADMIN LRT 2 MAP</h1>
     <div class="dropdown-container">
         <select id="status">
             <option value="0">Status</option>
@@ -77,9 +77,24 @@
             <option value="8">Train 008</option>
         </select>
     </div>
-
     
-
+    <div class="content">
+        <div class="form">
+            <form id="loginForm"> 
+                <div class="input-group">
+                    <i class="fa-solid fa-clock"></i>
+                    <input type="text" id="time" name="time" placeholder="Estimated time of arrival" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-pen"></i>
+                    <input type="text" id="details" name="details" placeholder="Details" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" id="save">CHANGE STATUS</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
     <div id="map"></div>
