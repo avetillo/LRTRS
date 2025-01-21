@@ -197,21 +197,37 @@
         });
     }
 
-// Function to animate marker along the route
-function animateMarkerAlongRoute(route) {
+    function animateMarkerAlongRoute(route, totalTrains) {
     var markers = [];
     var trainData = [];
+    var trainCount = 0; // Initializing the counter to start from 0
 
-    // Create moving markers and initialize their data
-    for (var i = 0; i < 13; i++) {
-        var marker = L.marker(route[i % route.length], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
-        markers.push(marker);
-        trainData.push({
-            currentIndex: i,       // Starting station index
-            direction: 'forward'   // Initial direction
-        });
+    // Function to add a new train and manage its start time
+    function addTrain() {
+        if (trainCount < totalTrains) {
+            // Create a new marker for each train
+            var marker = L.marker(route[0], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
+            markers.push(marker);
+            trainData.push({
+                currentIndex: 0,       // Starting at station index 0
+                direction: 'forward'   // Initial direction
+            });
+
+            // Update train count
+            trainCount++;
+        }
     }
 
+    // Add a new train with a dynamic interval to ensure a 2-second gap between each train
+    function startTrainWithInterval() {
+        addTrain(); // Add a train
+        setTimeout(startTrainWithInterval, 6000); // Call the function again after 2 seconds (the gap for the next train)
+    }
+
+    // Start the first train after a delay of 2 seconds
+    setTimeout(startTrainWithInterval, 2000);
+
+    // Function to move the markers along the path
     function moveAlongPath() {
         markers.forEach((marker, trainIndex) => {
             var train = trainData[trainIndex];
@@ -253,7 +269,6 @@ function animateMarkerAlongRoute(route) {
                     var lat = fromLatLng.lat + (toLatLng.lat - fromLatLng.lat) * progress;
                     var lng = fromLatLng.lng + (toLatLng.lng - fromLatLng.lng) * progress;
                     marker.setLatLng([lat, lng]);
-                    // map.setView([lat, lng], 14); // Adjust map view to follow marker
 
                     requestAnimationFrame(animateMarkerStep); // Continue the animation
                 } else {
@@ -265,15 +280,19 @@ function animateMarkerAlongRoute(route) {
             requestAnimationFrame(animateMarkerStep); // Start the animation for this marker
         });
 
-        // Restart the animation with a slight delay before moving again
-        setTimeout(moveAlongPath, 5000); // Wait for 5 seconds before moving again
+        // Continue moving the trains
+        setTimeout(moveAlongPath, 3000); // Wait for 3 seconds before moving again
     }
 
-    moveAlongPath(); // Start the animation process
+    // Start moving the trains along the path
+    moveAlongPath();
 }
 
-// Start the marker animation along the route
-animateMarkerAlongRoute(stationCoordinates);
+// Start the marker animation along the route with a limit of 13 trains
+animateMarkerAlongRoute(stationCoordinates, 13); 
+
+
+
     </script>
 </body>
 
