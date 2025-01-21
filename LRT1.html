@@ -185,21 +185,95 @@
         // Fit the map to the bounds of the route
         map.fitBounds(trainRoute.getBounds());
 
-         // Accordion toggle functionality
-         var acc = document.getElementsByClassName("accordion");
-        var i;
+        stationCoordinates = trainStations.map(station => station.coordinates);
 
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
+    // Function to create custom marker icon
+    function createCustomMarkerIcon(url) {
+        return L.icon({
+            iconUrl: url,
+            iconSize: [64, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -64]
+        });
+    }
+
+// Function to animate marker along the route
+function animateMarkerAlongRoute(route) {
+    var markers = [];
+    var trainData = [];
+
+    // Create moving markers and initialize their data
+    for (var i = 0; i < 13; i++) {
+        var marker = L.marker(route[i % route.length], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
+        markers.push(marker);
+        trainData.push({
+            currentIndex: i,       // Starting station index
+            direction: 'forward'   // Initial direction
+        });
+    }
+
+    function moveAlongPath() {
+        markers.forEach((marker, trainIndex) => {
+            var train = trainData[trainIndex];
+            var currentStation = route[train.currentIndex];
+            var nextIndex;
+
+            // Determine the next station based on direction
+            if (train.direction === 'forward') {
+                nextIndex = train.currentIndex + 1;
+                if (nextIndex >= route.length) {
+                    train.direction = 'backward';
+                    nextIndex = route.length - 2; // Move back to the second-to-last station
+                    // Change icon when reaching the end
+                    marker.setIcon(createCustomMarkerIcon('graphics/train-left.png'));
                 }
-            });
-        }
+            } else {
+                nextIndex = train.currentIndex - 1;
+                if (nextIndex < 0) {
+                    train.direction = 'forward';
+                    nextIndex = 1; // Move forward to the second station
+                    // Change icon when starting to move forward
+                    marker.setIcon(createCustomMarkerIcon('graphics/train-right.png'));
+                }
+            }
+
+            var nextStation = route[nextIndex];
+            var fromLatLng = L.latLng(currentStation);
+            var toLatLng = L.latLng(nextStation);
+
+            var duration = 2000; // Duration of movement between two points in ms
+            var startTime = null;
+
+            // Function to update the position of the marker during the animation
+            function animateMarkerStep(timestamp) {
+                if (!startTime) startTime = timestamp;
+                var progress = (timestamp - startTime) / duration;
+
+                if (progress < 1) {
+                    var lat = fromLatLng.lat + (toLatLng.lat - fromLatLng.lat) * progress;
+                    var lng = fromLatLng.lng + (toLatLng.lng - fromLatLng.lng) * progress;
+                    marker.setLatLng([lat, lng]);
+                    // map.setView([lat, lng], 14); // Adjust map view to follow marker
+
+                    requestAnimationFrame(animateMarkerStep); // Continue the animation
+                } else {
+                    marker.setLatLng(toLatLng); // Final position
+                    train.currentIndex = nextIndex; // Update train's current index
+                }
+            }
+
+            requestAnimationFrame(animateMarkerStep); // Start the animation for this marker
+        });
+
+        // Restart the animation with a slight delay before moving again
+        setTimeout(moveAlongPath, 5000); // Wait for 5 seconds before moving again
+    }
+
+    moveAlongPath(); // Start the animation process
+}
+
+// Start the marker animation along the route
+animateMarkerAlongRoute(stationCoordinates);
     </script>
 </body>
 
