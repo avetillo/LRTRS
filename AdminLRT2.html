@@ -83,11 +83,11 @@
             <form id="loginForm"> 
                 <div class="input-group">
                     <i class="fa-solid fa-clock"></i>
-                    <input type="text" id="time" name="time" placeholder="Estimated time of arrival" required>
+                    <input type="text" id="time" name="time" placeholder="Estimated time of arrival" >
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-pen"></i>
-                    <input type="text" id="details" name="details" placeholder="Details" required>
+                    <input type="text" id="details" name="details" placeholder="Details" >
                 </div>
                 <div class="form-buttons">
                     <button type="submit" id="save">CHANGE STATUS</button>
@@ -169,6 +169,32 @@
                 }
             });
         }
+
+    // Save data to localStorage when "CHANGE STATUS" is clicked
+    document.getElementById("save").addEventListener("click", function (e) {
+        e.preventDefault(); // Prevent form submission
+
+        // Get values from the dropdowns and input fields
+        const status = document.getElementById("status").value;
+        const train = document.getElementById("trains").value;
+        const station = document.getElementById("station").value;
+        const time = document.getElementById("time").value;
+        const details = document.getElementById("details").value;
+
+        // Store values in localStorage
+        localStorage.setItem("status", status);
+        localStorage.setItem("train", train);
+        localStorage.setItem("station", station);
+        localStorage.setItem("time", time);
+        localStorage.setItem("details", details);
+
+        alert("Status saved! Go to LRT2.html to view the details.");
+    });
+
+
+
+
+
     </script>
 </body>
 

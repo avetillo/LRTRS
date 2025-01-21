@@ -35,7 +35,7 @@
 
     <h1>LRT 1 ROUTE MAP</h1>
     <div class="dropdown-container">
-        <select id="status">
+        <select id="istatus">
             <option value="0">Status</option>
             <option value="1">Onboarding</option>
             <option value="2">In Transit</option>
@@ -110,9 +110,14 @@
     <div class="accordion-container">
         <button class="accordion">Status Details</button>
         <div class="panel">
-            <p>Est Time of Completion :</p>
-            <p>Train ID :</p>
-            <p>Details: </p>
+            <p><strong>Est Time of Completion :</strong></p>
+            <p id="itime"></p>
+            <p><strong>Station :</strong></p>
+            <p id="istation"></p>
+            <p><strong>Train ID :</strong></p>
+            <p id="itrain"></p>
+            <p><strong>Details :</strong></p>
+            <p id="idetails"></p>
         </div>
     </div>
 
@@ -122,6 +127,22 @@
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
     <script>
+
+        // Accordion toggle functionality
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
         // Initialize the map
         var map = L.map('map').setView([14.5898, 120.9814], 13);
 
@@ -292,6 +313,56 @@
 animateMarkerAlongRoute(stationCoordinates, 13); 
 
 
+
+// Load data from localStorage and display it
+document.addEventListener("DOMContentLoaded", function () {
+    // Map of station indices to their names
+    const stationMap = {
+    "1": "Fernando Poe Jr.",
+    "2": "Balintawak",
+    "3": "Monumento",
+    "4": "5th Avenue",
+    "5": "R. Papa",
+    "6": "Abad Santos",
+    "7": "Blumentritt",
+    "8": "Tayuman",
+    "9": "Bambang",
+    "10": "Doroteo Jose",
+    "11": "Carriedo",
+    "12": "Central Terminal",
+    "13": "UN Avenue",
+    "14": "Pedro Gil",
+    "15": "Quirino",
+    "16": "Vito Cruz",
+    "17": "Gil Puyat",
+    "18": "Libertad",
+    "19": "EDSA",
+    "20": "Baclaran",
+    "21": "Redemptorist",
+    "22": "MIA",
+    "23": "PITX",
+    "24": "Ninoy Aquino",
+    "25": "Dr Santos"
+};
+
+    // Get values from localStorage
+    const status = localStorage.getItem("istatus");
+    const train = localStorage.getItem("itrain");
+    const stationIndex = localStorage.getItem("istation");
+    const time = localStorage.getItem("itime");
+    const details = localStorage.getItem("idetails");
+
+    // Display values in the appropriate elements
+    document.getElementById("istatus").value = status || "0";
+    document.getElementById("itrain").textContent = train !== "0" ? `Train ${train}` : "No Train Selected";
+
+    // Use the stationMap to get the station name
+    const stationName = stationMap[stationIndex] || "No Station Selected";
+    document.getElementById("istation").textContent = stationName;
+
+    document.getElementById("itime").textContent = time || "Not Specified";
+    document.getElementById("idetails").textContent = details || "No Details Provided";
+});
 
     </script>
 </body>

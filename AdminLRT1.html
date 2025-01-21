@@ -35,7 +35,7 @@
 
     <h1>ADMIN LRT 1 MAP</h1>
     <div class="dropdown-container">
-        <select id="status">
+        <select id="istatus">
             <option value="0">Status</option>
             <option value="1">Onboarding</option>
             <option value="2">In Transit</option>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="dropdown-station">
-        <select id="station">
+        <select id="istation">
             <option value="0">Train Station </option>
             <option value="1">Fernando Poe Jr.</option>
             <option value="2">Balintawak</option>
@@ -77,7 +77,7 @@
     </div>
 
     <div class="dropdown-train">
-        <select id="trains">
+        <select id="itrains">
             <option value="0">Train ID</option>
             <option value="1">Train 001</option>
             <option value="2">Train 002</option>
@@ -112,8 +112,23 @@
         </select>
     </div>
 
-    
-
+    <div class="content">
+        <div class="form">
+            <form id="loginForm"> 
+                <div class="input-group">
+                    <i class="fa-solid fa-clock"></i>
+                    <input type="text" id="itime" name="time" placeholder="Estimated time of arrival" >
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-pen"></i>
+                    <input type="text" id="idetails" name="details" placeholder="Details" >
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" id="isave">CHANGE STATUS</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
     <div id="map"></div>
@@ -122,6 +137,7 @@
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
     <script>
+
         // Initialize the map
         var map = L.map('map').setView([14.5898, 120.9814], 13);
 
@@ -185,8 +201,9 @@
         // Fit the map to the bounds of the route
         map.fitBounds(trainRoute.getBounds());
 
-         // Accordion toggle functionality
-         var acc = document.getElementsByClassName("accordion");
+
+// Accordion toggle functionality
+var acc = document.getElementsByClassName("accordion");
         var i;
 
         for (i = 0; i < acc.length; i++) {
@@ -200,6 +217,29 @@
                 }
             });
         }
+
+    // Save data to localStorage when "CHANGE STATUS" is clicked
+    document.getElementById("isave").addEventListener("click", function (e) {
+        e.preventDefault(); // Prevent form submission
+
+        // Get values from the dropdowns and input fields
+        const status = document.getElementById("istatus").value;
+        const train = document.getElementById("itrains").value;
+        const station = document.getElementById("istation").value;
+        const time = document.getElementById("itime").value;
+        const details = document.getElementById("idetails").value;
+
+        // Store values in localStorage
+        localStorage.setItem("istatus", status);
+        localStorage.setItem("itrain", train);
+        localStorage.setItem("istation", station);
+        localStorage.setItem("itime", time);
+        localStorage.setItem("idetails", details);
+
+        alert("Status saved! Go to LRT1.html to view the details.");
+    });
+
+
     </script>
 </body>
 

@@ -209,7 +209,7 @@
          /* Accordion container */
          .accordion-container {
             position: absolute;
-            top: 82%;
+            top: 70%;
             left: 85%;
             transform: translate(-50%, -50%);
             text-align: left;

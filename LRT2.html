@@ -35,7 +35,7 @@
 
     <h1>LRT 2 ROUTE MAP</h1>
     <div class="dropdown-container">
-        <select id="status">
+        <select id="vstatus">
             <option value="0">Status</option>
             <option value="1">Onboarding</option>
             <option value="2">In Transit</option>
@@ -86,9 +86,14 @@
     <div class="accordion-container">
         <button class="accordion">Status Details</button>
         <div class="panel">
-            <p>Est Time of Completion :</p>
-            <p>Train ID :</p>
-            <p>Details: </p>
+            <p><strong>Est Time of Completion :</strong></p>
+            <p id="vtime"></p>
+            <p><strong>Station :</strong></p>
+            <p id="vstation"></p>
+            <p><strong>Train ID :</strong></p>
+            <p id="vtrain"></p>
+            <p><strong>Details :</strong></p>
+            <p id="vdetails"></p>
         </div>
     </div>
 
@@ -258,6 +263,46 @@ function animateMarkerAlongRoute(route) {
 
 // Start the marker animation along the route
 animateMarkerAlongRoute(stationCoordinates);
+
+
+// Load data from localStorage and display it
+document.addEventListener("DOMContentLoaded", function () {
+    // Map of station indices to their names
+    const stationMap = {
+        "1": "Recto",
+        "2": "Legarda",
+        "3": "Pureza",
+        "4": "V. Mapa",
+        "5": "J. Ruiz",
+        "6": "Gilmore",
+        "7": "Betty Go-Belmonte",
+        "8": "Cubao",
+        "9": "Anonas",
+        "10": "Katipunan",
+        "11": "Santolan",
+        "12": "Marikina-Pasig",
+        "13": "Antipolo"
+    };
+
+    // Get values from localStorage
+    const status = localStorage.getItem("status");
+    const train = localStorage.getItem("train");
+    const stationIndex = localStorage.getItem("station");
+    const time = localStorage.getItem("time");
+    const details = localStorage.getItem("details");
+
+    // Display values in the appropriate elements
+    document.getElementById("vstatus").value = status || "0";
+    document.getElementById("vtrain").textContent = train !== "0" ? `Train ${train}` : "No Train Selected";
+
+    // Use the stationMap to get the station name
+    const stationName = stationMap[stationIndex] || "No Station Selected";
+    document.getElementById("vstation").textContent = stationName;
+
+    document.getElementById("vtime").textContent = time || "Not Specified";
+    document.getElementById("vdetails").textContent = details || "No Details Provided";
+});
+
 
             </script>
 </body>
