@@ -42,6 +42,7 @@
             <option value="3">Arriving</option>
             <option value="4">Under Maintenance</option>
             <option value="5">Emergency Stop</option>
+
         </select>
     </div>
 
@@ -193,126 +194,140 @@ var stationLocationIcon = L.icon({
 });
 
 
-
 function animateMarkerAlongRoute(route, totalTrains) {
-    var markers = [];
-    var trainData = [];
-    var trainCount = 0; // Initializing the counter to start from 0
-    var trainNames = []; // Array to store train names
-    var focusedMarker = null; // Variable to track the focused marker
+    const markers = [];
+    const trainData = [];
+    let trainCount = 0; // Counter for added trains
+    const trainNames = []; // Store train names for reference
+    let focusedMarker = null; // Track the clicked marker for focus
 
-    // Function to add a new train and manage its start time
+    // Function to update the train status dropdown
+    function updateTrainStatus(status) {
+        const statusDropdown = document.getElementById('vstatus');
+        if (statusDropdown) statusDropdown.value = status;
+    }
+
+    // Function to add a train marker
     function addTrain() {
         if (trainCount < totalTrains) {
-            var trainName = `Train ${String(trainCount + 1).padStart(3, '0')}`;
-            trainNames.push(trainName); // Store the name for later use
+            const trainName = `Train ${String(trainCount + 1).padStart(3, '0')}`;
+            trainNames.push(trainName);
 
-            // Create a new marker for each train
-            var marker = L.marker(route[0], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
-            marker.bindPopup(`<b>${trainName}</b>`);  // Bind the popup after the marker is created
+            // Create the train marker at the starting point
+            const marker = L.marker(route[0], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
+            marker.bindPopup(`<b>${trainName}</b>`); // Bind train name popup
             markers.push(marker);
 
-            marker.on('click', function () {
-            focusedMarker = marker; // Track the clicked marker
-            map.flyTo(marker.getLatLng(), 17, { duration: 1 }); // Smooth zoom-in with transition
-            marker.openPopup(); // Open the popup of the clicked train
-        });
-
-
-            trainData.push({
-                currentIndex: 0,       // Starting at station index 0
-                direction: 'forward'   // Initial direction
+            // Event listener for train marker click
+            marker.on('click', () => {
+                focusedMarker = marker;
+                map.flyTo(marker.getLatLng(), 17, { duration: 1 }); // Smooth zoom to train
+                marker.openPopup();
             });
-            // Update train count
-            trainCount++;
+
+            // Store train data for movement logic
+            trainData.push({
+                currentIndex: 0,       // Start at the first station
+                direction: 'forward', // Initial movement direction
+            });
+
+            trainCount++; // Increment the train counter
         }
     }
 
-    // Add a new train with a dynamic interval to ensure a 2-second gap between each train
+    // Add trains dynamically with a 10-second interval
     function startTrainWithInterval() {
-        addTrain(); // Add a train
-        setTimeout(startTrainWithInterval, 10000); // Call the function again after 10 seconds (the gap for the next train)
+        if (trainCount < totalTrains) {
+            addTrain();
+            setTimeout(startTrainWithInterval, 10000); // Add the next train after 10 seconds
+        }
     }
 
-    // Start the first train after a delay of 2 seconds
+    // Start adding the first train after a 2-second delay
     setTimeout(startTrainWithInterval, 2000);
 
-    // Function to update the train status
-    function updateTrainStatus(status) {
-        const statusDropdown = document.getElementById('vstatus');
-        statusDropdown.value = status;
-    }
-
-    // Function to move the markers along the path
+    // Function to move all train markers along the route
     function moveAlongPath() {
-        markers.forEach((marker, trainIndex) => {
-            var train = trainData[trainIndex];
-            var currentStation = route[train.currentIndex];
-            var nextIndex;
+        const statusDropdown = document.getElementById('vstatus');
 
-            // Determine the next station based on direction
+        // If the dropdown doesn't exist, return early
+        if (!statusDropdown) return;
+
+        // Check the current status value
+        const currentStatus = parseInt(statusDropdown.value);
+
+        // If the status is 5 (Emergency Stop), stop all trains
+        if (currentStatus === 5) {
+            console.log("Trains stopped due to Emergency Stop.");
+            setTimeout(moveAlongPath, 1000); // Recheck after 1 second
+            return;
+        }
+
+        // Resume train movement when status is not 5
+        markers.forEach((marker, trainIndex) => {
+            const train = trainData[trainIndex];
+            const currentStation = route[train.currentIndex];
+            let nextIndex;
+
+            // Determine next station index based on direction
             if (train.direction === 'forward') {
                 nextIndex = train.currentIndex + 1;
                 if (nextIndex >= route.length) {
-                    train.direction = 'backward';
-                    nextIndex = route.length - 2; // Move back to the second-to-last station
-                    // Change icon when reaching the end
-                    marker.setIcon(createCustomMarkerIcon('graphics/train-left.png'));
+                    train.direction = 'backward'; // Reverse direction at the end of the route
+                    nextIndex = route.length - 2;
+                    marker.setIcon(createCustomMarkerIcon('graphics/train-left.png')); // Change icon
                 }
             } else {
                 nextIndex = train.currentIndex - 1;
                 if (nextIndex < 0) {
-                    train.direction = 'forward';
-                    nextIndex = 1; // Move forward to the second station
-                    // Change icon when starting to move forward
-                    marker.setIcon(createCustomMarkerIcon('graphics/train-right.png'));
+                    train.direction = 'forward'; // Change direction at the start of the route
+                    nextIndex = 1;
+                    marker.setIcon(createCustomMarkerIcon('graphics/train-right.png')); // Change icon
                 }
             }
 
-            var nextStation = route[nextIndex];
-            var fromLatLng = L.latLng(currentStation);
-            var toLatLng = L.latLng(nextStation);
+            const nextStation = route[nextIndex];
+            const fromLatLng = L.latLng(currentStation);
+            const toLatLng = L.latLng(nextStation);
 
-            var duration = 2000; // Duration of movement between two points in ms
-            var startTime = null;
+            const duration = 2000; // Movement duration in ms
+            let startTime = null;
 
-            // Function to update the position of the marker during the animation
+            // Animate the marker's movement
             function animateMarkerStep(timestamp) {
                 if (!startTime) startTime = timestamp;
-                var progress = (timestamp - startTime) / duration;
+                const progress = (timestamp - startTime) / duration;
 
                 if (progress < 1) {
-                    var lat = fromLatLng.lat + (toLatLng.lat - fromLatLng.lat) * progress;
-                    var lng = fromLatLng.lng + (toLatLng.lng - fromLatLng.lng) * progress;
+                    const lat = fromLatLng.lat + (toLatLng.lat - fromLatLng.lat) * progress;
+                    const lng = fromLatLng.lng + (toLatLng.lng - fromLatLng.lng) * progress;
                     marker.setLatLng([lat, lng]);
 
-                    
-
-                    // Check proximity to next station
-                    if (progress >= 0.5 && progress < 0.8) { // If the train is approaching the next station
-                        updateTrainStatus(3);  // "Arriving"
+                    // Update train status based on progress
+                    if (progress >= 0.5 && progress < 0.8) {
+                        updateTrainStatus(3); // Arriving
                     } else if (progress < 0.5) {
-                        updateTrainStatus(2);  // "In Transit"
+                        updateTrainStatus(2); // In Transit
                     }
 
-                    requestAnimationFrame(animateMarkerStep); // Continue the animation
+                    requestAnimationFrame(animateMarkerStep); // Continue animation
                 } else {
                     marker.setLatLng(toLatLng); // Final position
-                    train.currentIndex = nextIndex; // Update train's current index
+                    train.currentIndex = nextIndex; // Update train's current station index
 
-                    // When the train stops at any station
-                    updateTrainStatus(1);  // "Onboarding"
+                    // When the train stops at a station
+                    updateTrainStatus(1); // Onboarding
                 }
             }
 
-            requestAnimationFrame(animateMarkerStep); // Start the animation for this marker
+            requestAnimationFrame(animateMarkerStep);
         });
 
-        // Continue moving the trains
-        setTimeout(moveAlongPath, 5000); // Wait for 5 seconds before moving again
+        // Continue moving trains
+        setTimeout(moveAlongPath, 5000); // Recheck after 5 seconds
     }
 
-    // Start moving the trains along the path
+    // Start moving trains along the path
     moveAlongPath();
 }
 

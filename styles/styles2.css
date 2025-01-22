@@ -22,14 +22,15 @@ body {
     margin-bottom: 10px;
     color: #232D3F;
 }
-/* Left section can hold an image, or you can set a background image in CSS */
-.left-section {
-    flex: 0 0 71.1%; /* Takes up half the screen (or more/less, depending on flex distribution) */
-    position: relative;
-    overflow: hidden; /* In case the image is bigger than container */
-    /* If you want a background image via CSS instead of an <img> tag:
-       background: url("your-image.jpg") no-repeat center center / cover; */
-  }
+
+.logo {
+    margin-left: 0;
+    width: auto;
+    height: 100vh;
+    position: absolute;
+    left: 0;
+}
+
   .right-section {
     flex: 0 0 28.9%;
     display: flex;
@@ -37,18 +38,12 @@ body {
     align-items: center;
     background-color: #FFFFFF; /* or any color you want for the login side */
   }
+
 .container {
     text-align: center;
     color: white;
 }
 
-/* .logo {
-    margin-left: 0;
-    width: auto;
-    height: 100vh;
-    position: absolute;
-    left: 0;
-} */
 .container {
     text-align: center;
     color: white;
