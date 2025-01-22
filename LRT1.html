@@ -227,7 +227,7 @@
     function addTrain() {
         if (trainCount < totalTrains) {
             // Create a new marker for each train
-            var marker = L.marker(route[0], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
+            var marker = L.marker(route[0], { icon: createCustomMarkerIcon('graphics/train-left.png') }).addTo(map);
             markers.push(marker);
             trainData.push({
                 currentIndex: 0,       // Starting at station index 0
@@ -262,7 +262,7 @@
                     train.direction = 'backward';
                     nextIndex = route.length - 2; // Move back to the second-to-last station
                     // Change icon when reaching the end
-                    marker.setIcon(createCustomMarkerIcon('graphics/train-left.png'));
+                    marker.setIcon(createCustomMarkerIcon('graphics/train-right.png'));
                 }
             } else {
                 nextIndex = train.currentIndex - 1;
@@ -270,7 +270,7 @@
                     train.direction = 'forward';
                     nextIndex = 1; // Move forward to the second station
                     // Change icon when starting to move forward
-                    marker.setIcon(createCustomMarkerIcon('graphics/train-right.png'));
+                    marker.setIcon(createCustomMarkerIcon('graphics/train-left.png'));
                 }
             }
 
@@ -310,7 +310,7 @@
 }
 
 // Start the marker animation along the route with a limit of 13 trains
-animateMarkerAlongRoute(stationCoordinates, 13); 
+animateMarkerAlongRoute(stationCoordinates, 30); 
 
 
 

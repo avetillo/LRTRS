@@ -97,7 +97,7 @@
         </div>
     </div>
 
-    
+   
 
     <div id="map"></div>
 
@@ -120,7 +120,6 @@
                 }
             });
         }
-
 
          // Initialize the map
          var map = L.map('map').setView([14.5898, 120.9814], 13);
@@ -181,26 +180,70 @@ function createCustomMarkerIcon(url) {
     return L.icon({
         iconUrl: url,
         iconSize: [64, 32],
-        iconAnchor: [16, 32],
+        iconAnchor: [16, 30],
         popupAnchor: [0, -64]
     });
 }
 
-// Function to animate marker along the route
-function animateMarkerAlongRoute(route) {
+var stationLocationIcon = L.icon({
+    iconUrl: 'graphics/station-location.gif', // Path to the GIF
+    iconSize: [64, 64], // Adjust the size of the icon as needed
+    iconAnchor: [32, 64], // Anchor point of the icon
+    popupAnchor: [0, -64] // Popup location relative to the icon
+});
+
+
+
+function animateMarkerAlongRoute(route, totalTrains) {
     var markers = [];
     var trainData = [];
+    var trainCount = 0; // Initializing the counter to start from 0
+    var trainNames = []; // Array to store train names
+    var focusedMarker = null; // Variable to track the focused marker
 
-    // Create moving markers and initialize their data
-    for (var i = 0; i < 8; i++) {
-        var marker = L.marker(route[i % route.length], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
-        markers.push(marker);
-        trainData.push({
-            currentIndex: i,       // Starting station index
-            direction: 'forward'   // Initial direction
+    // Function to add a new train and manage its start time
+    function addTrain() {
+        if (trainCount < totalTrains) {
+            var trainName = `Train ${String(trainCount + 1).padStart(3, '0')}`;
+            trainNames.push(trainName); // Store the name for later use
+
+            // Create a new marker for each train
+            var marker = L.marker(route[0], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
+            marker.bindPopup(`<b>${trainName}</b>`);  // Bind the popup after the marker is created
+            markers.push(marker);
+
+            marker.on('click', function () {
+            focusedMarker = marker; // Track the clicked marker
+            map.flyTo(marker.getLatLng(), 17, { duration: 1 }); // Smooth zoom-in with transition
+            marker.openPopup(); // Open the popup of the clicked train
         });
+
+
+            trainData.push({
+                currentIndex: 0,       // Starting at station index 0
+                direction: 'forward'   // Initial direction
+            });
+            // Update train count
+            trainCount++;
+        }
     }
 
+    // Add a new train with a dynamic interval to ensure a 2-second gap between each train
+    function startTrainWithInterval() {
+        addTrain(); // Add a train
+        setTimeout(startTrainWithInterval, 10000); // Call the function again after 10 seconds (the gap for the next train)
+    }
+
+    // Start the first train after a delay of 2 seconds
+    setTimeout(startTrainWithInterval, 2000);
+
+    // Function to update the train status
+    function updateTrainStatus(status) {
+        const statusDropdown = document.getElementById('vstatus');
+        statusDropdown.value = status;
+    }
+
+    // Function to move the markers along the path
     function moveAlongPath() {
         markers.forEach((marker, trainIndex) => {
             var train = trainData[trainIndex];
@@ -242,28 +285,107 @@ function animateMarkerAlongRoute(route) {
                     var lat = fromLatLng.lat + (toLatLng.lat - fromLatLng.lat) * progress;
                     var lng = fromLatLng.lng + (toLatLng.lng - fromLatLng.lng) * progress;
                     marker.setLatLng([lat, lng]);
-                    // map.setView([lat, lng], 14); // Adjust map view to follow marker
+
+                    
+
+                    // Check proximity to next station
+                    if (progress >= 0.5 && progress < 0.8) { // If the train is approaching the next station
+                        updateTrainStatus(3);  // "Arriving"
+                    } else if (progress < 0.5) {
+                        updateTrainStatus(2);  // "In Transit"
+                    }
 
                     requestAnimationFrame(animateMarkerStep); // Continue the animation
                 } else {
                     marker.setLatLng(toLatLng); // Final position
                     train.currentIndex = nextIndex; // Update train's current index
+
+                    // When the train stops at any station
+                    updateTrainStatus(1);  // "Onboarding"
                 }
             }
 
             requestAnimationFrame(animateMarkerStep); // Start the animation for this marker
         });
 
-        // Restart the animation with a slight delay before moving again
+        // Continue moving the trains
         setTimeout(moveAlongPath, 5000); // Wait for 5 seconds before moving again
     }
 
-    moveAlongPath(); // Start the animation process
+    // Start moving the trains along the path
+    moveAlongPath();
 }
 
-// Start the marker animation along the route
-animateMarkerAlongRoute(stationCoordinates);
+// Start the marker animation along the route with a limit of 8 trains
+animateMarkerAlongRoute(stationCoordinates, 8);
 
+
+
+
+/////////////////////////////////////////////////////
+
+// Variables to hold the current station and destination markers
+var currentStationMarker = null;
+var destinationMarker = null;
+
+// Event listener for "Current Station" change
+document.getElementById('station_from').addEventListener('change', function (event) {
+    const stationIndex = parseInt(event.target.value) - 1; // Subtract 1 to match array index
+    if (stationIndex >= 0) {
+        const station = trainStations[stationIndex];
+
+        // Remove the previous current station marker, if any
+        if (currentStationMarker) {
+            map.removeLayer(currentStationMarker);
+        }
+
+        // Add a new marker for the current station
+        currentStationMarker = L.marker(station.coordinates, { icon: stationLocationIcon })
+            .addTo(map)
+            .bindPopup(`<b>Current Station:</b> ${station.name}`)
+            .openPopup();
+
+        // Center the map on the current station
+        map.setView(station.coordinates, 14);
+
+        // Find the nearest train to the current station
+        const nearestTrain = findNearestTrain(station.coordinates);
+
+        // If a nearest train is found, animate it towards the destination
+        if (nearestTrain) {
+            // Get the destination station from the dropdown
+            const destinationIndex = parseInt(document.getElementById('station_to').value) - 1;
+            const destination = trainStations[destinationIndex];
+
+            // Start the animation to the destination
+            animateTrainToDestination(nearestTrain, station.coordinates, destination.coordinates);
+        }
+    }
+});
+
+// Event listener for "Destination Station" change
+document.getElementById('station_to').addEventListener('change', function (event) {
+    const stationIndex = parseInt(event.target.value) - 1; // Subtract 1 to match array index
+    if (stationIndex >= 0) {
+        const station = trainStations[stationIndex];
+
+        // Remove the previous destination marker, if any
+        if (destinationMarker) {
+            map.removeLayer(destinationMarker);
+        }
+
+        // Add a new marker for the destination station
+        destinationMarker = L.marker(station.coordinates, { icon: stationLocationIcon })
+            .addTo(map)
+            .bindPopup(`<b>Destination Station:</b> ${station.name}`)
+            .openPopup();
+
+        // Center the map on the destination station
+        map.setView(station.coordinates, 14);
+    }
+});
+
+/////////////////////////////////////////////////////
 
 // Load data from localStorage and display it
 document.addEventListener("DOMContentLoaded", function () {
@@ -304,7 +426,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-            </script>
+</script>
 </body>
 
 </html>
