@@ -101,6 +101,7 @@
    
 
     <div id="map"></div>
+    <div id="popup" class="popup"></div>
 
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
@@ -317,10 +318,12 @@ function animateMarkerAlongRoute(route, totalTrains) {
 
                     // When the train stops at a station
                     updateTrainStatus(1); // Onboarding
-
-                    if(focusedMarker.getLatLng().equals(currentStationMarker.getLatLng())) {
-                        alert("Train has arrived at the station.");
-                    updateTrainStatus(1); // Onboarding
+                    if (focusedMarker.getLatLng().equals(currentStationMarker.getLatLng())) {
+                        showPopup("Train has arrived at the station");  // Customize the message here
+                        updateTrainStatus(1);  // Onboarding
+                    } else if (focusedMarker.getLatLng().equals(destinationMarker.getLatLng())) {
+                        showPopup("Train has reached the destination");  // Customize the message here
+                        updateTrainStatus(1);  // Onboarding
                     }
 
                 }
@@ -446,6 +449,21 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("vdetails").textContent = details || "No Details Provided";
 });
 
+function showPopup(message) {
+    const popup = document.getElementById('popup');
+    popup.textContent = message;  // Set the message dynamically
+    popup.style.display = 'block';  // Show the popup
+    setTimeout(() => {
+        popup.style.opacity = 1;  // Fade in
+    }, 10);
+
+    setTimeout(() => {
+        popup.style.opacity = 0;  // Fade out
+        setTimeout(() => {
+            popup.style.display = 'none';  // Hide the popup
+        }, 1000);
+    }, 3000);  // Popup stays for 3 seconds
+}
 
 </script>
 </body>
