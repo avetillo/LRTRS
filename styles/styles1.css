@@ -295,6 +295,24 @@
             z-index: 1000;
         }
         
+        .popup {
+            display: none;
+            position: fixed;  /* Use fixed positioning for bottom center */
+            top: 20%;  /* Distance from the bottom */
+            left: 86%;
+            width: 300px;
+            transform: translateX(-50%);  /* Center horizontally */
+            background-color: #FFFFFF;
+            color: #26457C;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 20px;
+            text-align: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+        
 
 
 
