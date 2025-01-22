@@ -317,6 +317,12 @@ function animateMarkerAlongRoute(route, totalTrains) {
 
                     // When the train stops at a station
                     updateTrainStatus(1); // Onboarding
+
+                    if(focusedMarker.getLatLng().equals(currentStationMarker.getLatLng())) {
+                        alert("Train has arrived at the station.");
+                    updateTrainStatus(1); // Onboarding
+                    }
+
                 }
             }
 
