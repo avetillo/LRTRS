@@ -199,7 +199,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
     let trainCount = 0; // Counter for added trains
     const trainNames = []; // Store train names for reference
     let focusedMarker = null; // Track the clicked marker for focus
-    let ArrivedAtCurrentStation = false;
+
     // Function to update the train status dropdown
 
     //Center Train Focused View
@@ -338,13 +338,11 @@ function animateMarkerAlongRoute(route, totalTrains) {
                             // If train arrives at the current station before the destination
                             if (currentStationIndex < destinationStationIndex) {
                                 showPopup("Train has arrived at the station");
-                                ArrivedAtCurrentStation = true;
                             }
                         } else if (train.direction === 'backward') {
                             // If train already passed destination and returns to the current station
                             if (currentStationIndex > destinationStationIndex) {
                                 showPopup("Train has arrived at the station");
-                                ArrivedAtCurrentStation = true;
                             }
                         }
                     }
@@ -354,40 +352,12 @@ function animateMarkerAlongRoute(route, totalTrains) {
                             // If train arrives at the current station before the destination
                             if (currentStationIndex < destinationStationIndex) {
                                 showPopup("Train has reached the destination");
-                            if (currentStationMarker) {
-                                map.removeLayer(currentStationMarker);
-                            }
-                            if (destinationMarker) {
-                                map.removeLayer(destinationMarker);
-                            }
-
-                            // Reset the dropdowns to index 0 (reset to initial state)
-                            document.getElementById('station_from').selectedIndex = 0;
-                            document.getElementById('station_to').selectedIndex = 0;
-
-                            // Optionally, reset the state or variables to prepare for the next journey
-                            currentStationMarker = null;
-                            destinationMarker = null;
                                 ArrivedAtCurrentStation = true;
                             }
                         } else if (train.direction === 'backward') {
                             // If train already passed destination and returns to the current station
                             if (currentStationIndex > destinationStationIndex) {
                                 showPopup("Train has reached the destination");
-                                if (currentStationMarker) {
-                                map.removeLayer(currentStationMarker);
-                            }
-                            if (destinationMarker) {
-                                map.removeLayer(destinationMarker);
-                            }
-
-                            // Reset the dropdowns to index 0 (reset to initial state)
-                            document.getElementById('station_from').selectedIndex = 0;
-                            document.getElementById('station_to').selectedIndex = 0;
-
-                            // Optionally, reset the state or variables to prepare for the next journey
-                            currentStationMarker = null;
-                            destinationMarker = null;
                                 ArrivedAtCurrentStation = true;
                             }
                         }
