@@ -316,16 +316,46 @@ function animateMarkerAlongRoute(route, totalTrains) {
                     marker.setLatLng(toLatLng); // Final position
                     train.currentIndex = nextIndex; // Update train's current station index
 
+                    let currentStationIndex = route.findIndex(station => 
+                        L.latLng(station).equals(currentStationMarker.getLatLng())
+                    );
+                    let destinationStationIndex = route.findIndex(station => 
+                        L.latLng(station).equals(destinationMarker.getLatLng())
+                    );
+
                     // When the train stops at a station
                     updateTrainStatus(1); // Onboarding
+
                     if (focusedMarker.getLatLng().equals(currentStationMarker.getLatLng())) {
-                        showPopup("Train has arrived at the station");  // Customize the message here
-                        ArrivedAtCurrentStation = true;
-                        updateTrainStatus(1);  // Onboarding
-                    } else if (ArrivedAtCurrentStation === true && focusedMarker.getLatLng().equals(destinationMarker.getLatLng())) {
-                        showPopup("Train has reached the destination");  // Customize the message here
-                        ArrivedAtCurrentStation = false;
-                        updateTrainStatus(1);  // Onboarding
+                        if (train.direction === 'forward') {
+                            // If train arrives at the current station before the destination
+                            if (currentStationIndex < destinationStationIndex) {
+                                showPopup("Train has arrived at the station");
+                                ArrivedAtCurrentStation = true;
+                            }
+                        } else if (train.direction === 'backward') {
+                            // If train already passed destination and returns to the current station
+                            if (currentStationIndex > destinationStationIndex) {
+                                showPopup("Train has arrived at the station");
+                                ArrivedAtCurrentStation = true;
+                            }
+                        }
+                    }
+
+                    if (focusedMarker.getLatLng().equals(destinationMarker.getLatLng())) {
+                        if (train.direction === 'forward') {
+                            // If train arrives at the current station before the destination
+                            if (currentStationIndex < destinationStationIndex) {
+                                showPopup("Train has reached the destination");
+                                ArrivedAtCurrentStation = true;
+                            }
+                        } else if (train.direction === 'backward') {
+                            // If train already passed destination and returns to the current station
+                            if (currentStationIndex > destinationStationIndex) {
+                                showPopup("Train has reached the destination");
+                                ArrivedAtCurrentStation = true;
+                            }
+                        }
                     }
 
                 }
