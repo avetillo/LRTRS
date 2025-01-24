@@ -230,17 +230,12 @@ var acc = document.getElementsByClassName("accordion");
         const time = document.getElementById("itime").value;
         const details = document.getElementById("idetails").value;
 
-        let existingStatusList = JSON.parse(localStorage.getItem("LRT1trainStatuses"));
-        const newTrainStatus = {
-            status: status,
-            train: train,
-            station: station,
-            time: time,
-            details: details
-        };
-        existingStatusList.push(newTrainStatus);
-        localStorage.setItem("LRT1trainStatuses", JSON.stringify(existingStatusList));
-
+                // Store values in localStorage
+        localStorage.setItem("istatus", status);
+        localStorage.setItem("itrain", train);
+        localStorage.setItem("istation", station);
+        localStorage.setItem("itime", time);
+        localStorage.setItem("idetails", details);
         alert("Status saved! Go to LRT1.html to view the details.");
     });
 
