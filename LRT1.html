@@ -255,7 +255,7 @@
             trainNames.push(trainName);
 
             // Create the train marker at the starting point
-            const marker = L.marker(route[0], { icon: createCustomMarkerIcon('graphics/train-right.png') }).addTo(map);
+            const marker = L.marker(route[0], { icon: createCustomMarkerIcon('graphics/train-left.png') }).addTo(map);
             marker.bindPopup(`<b>${trainName}</b>`); // Bind train name popup
             markers.push(marker);
 

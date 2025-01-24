@@ -367,7 +367,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
                                             // Optionally, reset the state or variables to prepare for the next journey
                                             currentStationMarker = null;
                                             destinationMarker = null;
-                                ArrivedAtCurrentStation = true;
+                                
                             }
                         } else if (train.direction === 'backward') {
                             // If train already passed destination and returns to the current station
@@ -389,7 +389,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
                                         currentStationMarker = null;
                                         destinationMarker = null;
                                         
-                                ArrivedAtCurrentStation = true;
+                                
                             }
                         }
                     }
