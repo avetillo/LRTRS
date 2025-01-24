@@ -194,11 +194,11 @@ var stationLocationIcon = L.icon({
 function animateMarkerAlongRoute(route, totalTrains) {
     const markers = [];
     const trainData = [];
-    let trainCount = 0; // Counter for added trains
-    const trainNames = []; // Store train names for reference
-    let focusedMarker = null; // Track the clicked marker for focus
-
-    // Function to update the train status dropdown
+    const trainNames = [];
+    let trainCount = 0;
+    let focusedMarker = null;
+    let isUnderMaintenance = false;
+    let emergencyStop = false;
 
     //Center Train Focused View
     map.on('moveend', () => {
@@ -207,10 +207,37 @@ function animateMarkerAlongRoute(route, totalTrains) {
                 }
             });
 
-    function updateTrainStatus(status) {
+     // Function to update train status dropdown
+     function updateTrainStatus(status) {
         const statusDropdown = document.getElementById('vstatus');
-        if (statusDropdown) statusDropdown.value = status;
+        if (statusDropdown && status !== 4) {
+            statusDropdown.value = status;
+        }
     }
+
+    // Event listener for train status dropdown
+    document.getElementById('vstatus').addEventListener('change', function () {
+        const currentStatus = parseInt(this.value);
+        switch (currentStatus) {
+            case 1: // Normal speed
+                isUnderMaintenance = false;
+                emergencyStop = false;
+                console.log("Train resumed normal speed.");
+                break;
+            case 4: // Slow speed (maintenance)
+                isUnderMaintenance = true;
+                emergencyStop = false;
+                console.log("Train slowed down for maintenance.");
+                break;
+            case 5: // Emergency stop
+                emergencyStop = true;
+                console.log("Emergency stop activated.");
+                break;
+            default:
+                console.warn("Unknown status selected. No changes applied.");
+        }
+    });
+
 
     // Function to add a train marker
     function addTrain() {
@@ -253,32 +280,15 @@ function animateMarkerAlongRoute(route, totalTrains) {
 
     // Function to move all train markers along the route
     function moveAlongPath() {
-        const statusDropdown = document.getElementById('vstatus');
-
-        // If the dropdown doesn't exist, return early
-        if (!statusDropdown) return;
-
-        // Check the current status value
-        const currentStatus = parseInt(statusDropdown.value);
-
-        // If the status is 5 (Emergency Stop), stop all trains
-        if (currentStatus === 5) {
-            console.log("Trains stopped due to Emergency Stop.");
-            setTimeout(moveAlongPath, 1000); // Recheck after 1 second
-            return;
-        }
-
-            // If the status is 4 (Under Maintenance), slow down the trains
-        let movementDuration = 2000; // Default movement duration
-        if (currentStatus === 4) {
-            movementDuration = 5000; // Slow down the train for maintenance
-        }
-
-        // Resume train movement when status is not 5
         markers.forEach((marker, trainIndex) => {
             const train = trainData[trainIndex];
             const currentStation = route[train.currentIndex];
             let nextIndex;
+
+            if (emergencyStop) {
+                console.log("Emergency stop triggered. All trains stopped.");
+                return;
+            }
 
             // Determine next station index based on direction
             if (train.direction === 'forward') {
@@ -301,12 +311,18 @@ function animateMarkerAlongRoute(route, totalTrains) {
             const fromLatLng = L.latLng(currentStation);
             const toLatLng = L.latLng(nextStation);
 
-            const duration = 2000; // Movement duration in ms
+            const duration = isUnderMaintenance ? 8000 : 2000;
             let startTime = null;
 
             // Animate the marker's movement
             function animateMarkerStep(timestamp) {
                 if (!startTime) startTime = timestamp;
+
+                if (emergencyStop) {
+                    console.log("Animation stopped due to emergency stop.");
+                    return;
+                }
+
                 const progress = (timestamp - startTime) / duration;
 
                 if (progress < 1) {
@@ -320,12 +336,15 @@ function animateMarkerAlongRoute(route, totalTrains) {
                     } else if (progress < 0.5) {
                         updateTrainStatus(2); // In Transit
                     }
-
-                    requestAnimationFrame(animateMarkerStep); // Continue animation
+  requestAnimationFrame(animateMarkerStep);
                 } else {
-                    updateTrainStatus(1);
-                    marker.setLatLng(toLatLng); // Final position
-                    train.currentIndex = nextIndex; // Update train's current station index
+                    marker.setLatLng(toLatLng);
+                    train.currentIndex = nextIndex;
+
+                    if (!isUnderMaintenance) {
+                        updateTrainStatus(1); // Onboarding
+                        train.isOnboarding = true;
+                    }
                     
                     let currentStationIndex = route.findIndex(station => 
                         L.latLng(station).equals(currentStationMarker.getLatLng())
@@ -370,6 +389,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
                                             currentStationMarker = null;
                                             destinationMarker = null;
                                             focusedMarker = null;
+                                            time = null;
                                 
                             }
                         } else if (train.direction === 'backward') {
@@ -404,21 +424,11 @@ function animateMarkerAlongRoute(route, totalTrains) {
             requestAnimationFrame(animateMarkerStep);
         });
 
-        if (currentStatus == 4){
-            // continue moving trains but in a much slower speed
-            // resulting an effect where everything is slow due to a train being under maintenance
-            console.log('Debug Mode: Train under maintenance, so trains are very SLOW!');
-            
-            setTimeout(moveAlongPath, 14000); // Recheck after 14 seconds
-        }
-        else {
-            // Continue moving trains in a normal speed
-            setTimeout(moveAlongPath, 5000); // Recheck after 5 seconds
-            console.log('Debug Mode: No issues with trains, all trains in normal speed!');
+        if (!emergencyStop) {
+            setTimeout(moveAlongPath, 9000);
         }
     }
 
-    // Start moving trains along the path
     moveAlongPath();
 }
 
