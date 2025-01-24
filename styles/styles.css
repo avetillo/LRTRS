@@ -34,8 +34,8 @@ h1 {
     margin-bottom: 20px;
     padding: 5px;
     position: absolute; 
-    right: 5.9%;
-    top: 33%; 
+    right: 10.5%;
+    top: 30%; 
     
 }
 
@@ -45,8 +45,8 @@ h1 {
     align-items: flex-end; 
     justify-content: flex-start; 
     position: absolute;
-    right: 4.5%;
-    top: 48%; 
+    right: 8%;
+    top: 50%; 
     transform: translateY(-50%); 
 }
 
@@ -77,8 +77,8 @@ footer {
     margin-bottom: 20px;
     padding: 5px;
     position: absolute; 
-    right: 14%;
-    top: 55%; 
+    right: 18%;
+    top: 60%; 
 }
 
 .footer-bold {
@@ -88,8 +88,8 @@ footer {
     margin-bottom: 20px;
     padding: 5px;
     position: absolute; 
-    right: 9.5%;
-    top: 55%; 
+    right: 12.5%;
+    top: 60%; 
     text-decoration: underline;
 }
 
