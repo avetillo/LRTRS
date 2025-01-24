@@ -576,22 +576,34 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-function showPopup(message) {
+function showPopup(message, colorOptions = {}) {
     const popup = document.getElementById('popup');
-    popup.textContent = message;  // Set the message dynamically
-    popup.style.display = 'block';  // Show the popup
+    popup.textContent = message; // Set the message dynamically
+
+    if (colorOptions.backgroundColor) {
+        popup.style.backgroundColor = colorOptions.backgroundColor;
+    } else {
+        popup.style.backgroundColor = '#FFFFFFF'; // Default background color
+    }
+
+    if (colorOptions.textColor) {
+        popup.style.color = colorOptions.textColor;
+    } else {
+        popup.style.color = '#26457C'; // Default text color
+    }
+
+    popup.style.display = 'block'; // Show the popup
     setTimeout(() => {
-        popup.style.opacity = 1;  // Fade in
+        popup.style.opacity = 1; // Fade in
     }, 10);
 
     setTimeout(() => {
-        popup.style.opacity = 0;  // Fade out
+        popup.style.opacity = 0; // Fade out
         setTimeout(() => {
-            popup.style.display = 'none';  // Hide the popup
+            popup.style.display = 'none'; // Hide the popup
         }, 1000);
-    }, 3000);  // Popup stays for 3 seconds
+    }, 3000); // Popup stays for 3 seconds
 }
-
 </script>
 </body>
 
