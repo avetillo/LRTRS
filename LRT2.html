@@ -402,8 +402,18 @@ function animateMarkerAlongRoute(route, totalTrains) {
             requestAnimationFrame(animateMarkerStep);
         });
 
-        // Continue moving trains
-        setTimeout(moveAlongPath, 5000); // Recheck after 5 seconds
+        if (currentStatus == 4){
+            // continue moving trains but in a much slower speed
+            // resulting an effect where everything is slow due to a train being under maintenance
+            console.log('Debug Mode: Train under maintenance, so trains are very SLOW!');
+            
+            setTimeout(moveAlongPath, 14000); // Recheck after 14 seconds
+        }
+        else {
+            // Continue moving trains in a normal speed
+            setTimeout(moveAlongPath, 5000); // Recheck after 5 seconds
+            console.log('Debug Mode: No issues with trains, all trains in normal speed!');
+        }
     }
 
     // Start moving trains along the path
