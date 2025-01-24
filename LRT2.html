@@ -89,8 +89,6 @@
         <div class="panel">
             <p><strong>Est Time of Completion :</strong></p>
             <p id="vtime"></p>
-            <p><strong>Station :</strong></p>
-            <p id="vstation"></p>
             <p><strong>Train ID :</strong></p>
             <p id="vtrain"></p>
             <p><strong>Details :</strong></p>
@@ -270,6 +268,12 @@ function animateMarkerAlongRoute(route, totalTrains) {
             return;
         }
 
+            // If the status is 4 (Under Maintenance), slow down the trains
+        let movementDuration = 2000; // Default movement duration
+        if (currentStatus === 4) {
+            movementDuration = 5000; // Slow down the train for maintenance
+        }
+
         // Resume train movement when status is not 5
         markers.forEach((marker, trainIndex) => {
             const train = trainData[trainIndex];
@@ -330,8 +334,6 @@ function animateMarkerAlongRoute(route, totalTrains) {
                         L.latLng(station).equals(destinationMarker.getLatLng())
                     );
 
-                    // When the train stops at a station
-                     // Onboarding
 
                     if (focusedMarker.getLatLng().equals(currentStationMarker.getLatLng())) {
                         if (train.direction === 'forward') {
@@ -412,6 +414,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
 
 // Start the marker animation along the route with a limit of 8 trains
 animateMarkerAlongRoute(stationCoordinates, 8);
+
 /////////////////////////////////////////////////////
 
 // Variables to hold the current station and destination markers
@@ -552,17 +555,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // Get values from localStorage
     const status = localStorage.getItem("status");
     const train = localStorage.getItem("train");
-    const stationIndex = localStorage.getItem("station");
     const time = localStorage.getItem("time");
     const details = localStorage.getItem("details");
 
     // Display values in the appropriate elements
     document.getElementById("vstatus").value = status || "0";
     document.getElementById("vtrain").textContent = train !== "0" ? `Train ${train}` : "No Train Selected";
-
-    // Use the stationMap to get the station name
-    const stationName = stationMap[stationIndex] || "No Station Selected";
-    document.getElementById("vstation").textContent = stationName;
 
     document.getElementById("vtime").textContent = time || "Not Specified";
     document.getElementById("vdetails").textContent = details || "No Details Provided";

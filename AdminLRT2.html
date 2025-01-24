@@ -45,25 +45,6 @@
         </select>
     </div>
 
-    <div class="dropdown-station">
-        <select id="station">
-            <option value="0">Train Station</option>
-            <option value="1">Recto</option>
-            <option value="2">Legarda</option>
-            <option value="3">Pureza</option>
-            <option value="4">V. Mapa</option>
-            <option value="5">J. Ruiz</option>
-            <option value="6">Gilmore</option>
-            <option value="7">Betty Go-Belmonte</option>
-            <option value="8">Cubao</option>
-            <option value="9">Anonas</option>
-            <option value="10">Katipunan</option>
-            <option value="11">Santolan</option>
-            <option value="12">Marikina-Pasig</option>
-            <option value="13">Antipolo</option>
-        </select>
-    </div>
-
     <div class="dropdown-train">
         <select id="trains">
             <option value="0">Train ID</option>
@@ -178,14 +159,12 @@
         // Get values from the dropdowns and input fields
         const status = document.getElementById("status").value;
         const train = document.getElementById("trains").value;
-        const station = document.getElementById("station").value;
         const time = document.getElementById("time").value;
         const details = document.getElementById("details").value;
 
         // Store values in localStorage
         localStorage.setItem("status", status);
         localStorage.setItem("train", train);
-        localStorage.setItem("station", station);
         localStorage.setItem("time", time);
         localStorage.setItem("details", details);
         alert("Status saved! Go to LRT2.html to view the details.");
