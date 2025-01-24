@@ -201,7 +201,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
     let trainCount = 0; // Counter for added trains
     const trainNames = []; // Store train names for reference
     let focusedMarker = null; // Track the clicked marker for focus
-
+    let ArrivedAtCurrentStation = false;
     // Function to update the train status dropdown
     function updateTrainStatus(status) {
         const statusDropdown = document.getElementById('vstatus');
@@ -320,9 +320,11 @@ function animateMarkerAlongRoute(route, totalTrains) {
                     updateTrainStatus(1); // Onboarding
                     if (focusedMarker.getLatLng().equals(currentStationMarker.getLatLng())) {
                         showPopup("Train has arrived at the station");  // Customize the message here
+                        ArrivedAtCurrentStation = true;
                         updateTrainStatus(1);  // Onboarding
-                    } else if (focusedMarker.getLatLng().equals(destinationMarker.getLatLng())) {
+                    } else if (ArrivedAtCurrentStation === true && focusedMarker.getLatLng().equals(destinationMarker.getLatLng())) {
                         showPopup("Train has reached the destination");  // Customize the message here
+                        ArrivedAtCurrentStation = false;
                         updateTrainStatus(1);  // Onboarding
                     }
 
