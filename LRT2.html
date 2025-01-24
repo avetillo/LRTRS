@@ -376,7 +376,128 @@ function animateMarkerAlongRoute(route, totalTrains) {
 // Start the marker animation along the route with a limit of 8 trains
 animateMarkerAlongRoute(stationCoordinates, 8);
 
+var normalAnimId = null;     // RequestAnimationFrame ID for normal
+var maintenanceAnimId = null; // RequestAnimationFrame ID for maintenance
+var isMaintenanceMode = false; // Track whether we’re in maintenance mode
 
+// Maintenance Animation
+function animateMarkerAlongRouteMaintenance() {
+  markers.forEach((marker, index) => {
+    var train = trainData[index];
+    var fromCoords = stationCoordinates[train.currentIndex];
+    var nextIndex;
+
+    // forward/back logic
+    if (train.direction === 'forward') {
+      nextIndex = train.currentIndex + 1;
+      if (nextIndex >= stationCoordinates.length) {
+        train.direction = 'backward';
+        nextIndex = stationCoordinates.length - 2;
+        marker.setIcon(createCustomMarkerIcon('graphics/train-left.png'));
+      }
+    } else {
+      nextIndex = train.currentIndex - 1;
+      if (nextIndex < 0) {
+        train.direction = 'forward';
+        nextIndex = 1;
+        marker.setIcon(createCustomMarkerIcon('graphics/train-right.png'));
+      }
+    }
+
+    var toCoords = stationCoordinates[nextIndex];
+    var duration = 7000;  
+
+    var startTime = null;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = (timestamp - startTime) / duration;
+      if (progress < 1) {
+        var lat = fromCoords[0] + (toCoords[0] - fromCoords[0]) * progress;
+        var lng = fromCoords[1] + (toCoords[1] - fromCoords[1]) * progress;
+        marker.setLatLng([lat, lng]);
+        maintenanceAnimId = requestAnimationFrame(step);
+      } else {
+        marker.setLatLng(toCoords);
+        train.currentIndex = nextIndex;
+      }
+    }
+    maintenanceAnimId = requestAnimationFrame(step);
+  });
+
+  // If still in maintenance, repeat in 5s
+  if (isMaintenanceMode) {
+    setTimeout(animateMarkerAlongRouteMaintenance, 7000);
+  }
+}
+
+// Modify your existing “normal” animation to store its requestAnimationFrame ID 
+function animateMarkerAlongRouteNormal() {
+  markers.forEach((marker, index) => {
+    var train = trainData[index];
+    var fromCoords = stationCoordinates[train.currentIndex];
+    var nextIndex;
+
+    if (train.direction === 'forward') {
+      nextIndex = train.currentIndex + 1;
+      if (nextIndex >= stationCoordinates.length) {
+        train.direction = 'backward';
+        nextIndex = stationCoordinates.length - 2;
+        marker.setIcon(createCustomMarkerIcon('graphics/train-left.png'));
+      }
+    } else {
+      nextIndex = train.currentIndex - 1;
+      if (nextIndex < 0) {
+        train.direction = 'forward';
+        nextIndex = 1;
+        marker.setIcon(createCustomMarkerIcon('graphics/train-right.png'));
+      }
+    }
+
+    var toCoords = stationCoordinates[nextIndex];
+    var duration = 2000; // faster: 2s
+    var startTime = null;
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = (timestamp - startTime) / duration;
+      if (progress < 1) {
+        var lat = fromCoords[0] + (toCoords[0] - fromCoords[0]) * progress;
+        var lng = fromCoords[1] + (toCoords[1] - fromCoords[1]) * progress;
+        marker.setLatLng([lat, lng]);
+        normalAnimId = requestAnimationFrame(step);
+      } else {
+        marker.setLatLng(toCoords);
+        train.currentIndex = nextIndex;
+      }
+    }
+    normalAnimId = requestAnimationFrame(step);
+  });
+
+  // If still in normal mode, repeat in 5s
+  if (!isMaintenanceMode) {
+    setTimeout(animateMarkerAlongRouteNormal, 5000);
+  }
+}
+
+// Switch logic when status changes. 
+var statusSelect = document.getElementById("vstatus");
+statusSelect.addEventListener("change", function() {
+  var newStatus = this.value;
+
+  if (newStatus === "4") {
+    // Under Maintenance => stop normal, start maintenance
+    isMaintenanceMode = true;
+    if (normalAnimId) cancelAnimationFrame(normalAnimId);
+    animateMarkerAlongRouteMaintenance();
+  } else {
+    // Not maintenance => stop maintenance, start normal
+    isMaintenanceMode = false;
+    if (maintenanceAnimId) cancelAnimationFrame(maintenanceAnimId);
+    animateMarkerAlongRouteNormal();
+  }
+});
+
+animateMarkerAlongRouteNormal();
 
 
 /////////////////////////////////////////////////////
