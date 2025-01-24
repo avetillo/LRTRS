@@ -35,7 +35,7 @@
 
     <h1>LRT 2 ROUTE MAP</h1>
     <div class="dropdown-container">
-        <select id="vstatus" disabled>
+        <select id="vstatus" >
             <option value="0">Status</option>
             <option value="1">Onboarding</option>
             <option value="2">In Transit</option>
@@ -214,6 +214,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
             statusDropdown.value = status;
         }
     }
+
 
     // Event listener for train status dropdown
     document.getElementById('vstatus').addEventListener('change', function () {
@@ -412,8 +413,6 @@ function animateMarkerAlongRoute(route, totalTrains) {
                                         currentStationMarker = null;
                                         destinationMarker = null;
                                         focusedMarker = null;
-                                        
-                                
                             }
                         }
                     }
@@ -551,7 +550,6 @@ document.getElementById('station_to').addEventListener('change', function (event
 });
 
 /////////////////////////////////////////////////////
-
 // Load data from localStorage and display it
 document.addEventListener("DOMContentLoaded", function () {
     // Map of station indices to their names
@@ -581,7 +579,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Display values in the appropriate elements
     document.getElementById("vstatus").value = status || "0";
     document.getElementById("vtrain").textContent = train !== "0" ? `Train ${train}` : "No Train Selected";
-
     document.getElementById("vtime").textContent = time || "Not Specified";
     document.getElementById("vdetails").textContent = details || "No Details Provided";
     }
@@ -593,7 +590,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateDisplay();
     });
 });
-
+////////////////////////////////////////////
 function showPopup(message, colorOptions = {}) {
     const popup = document.getElementById('popup');
     popup.textContent = message; // Set the message dynamically
