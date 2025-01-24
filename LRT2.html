@@ -35,7 +35,7 @@
 
     <h1>LRT 2 ROUTE MAP</h1>
     <div class="dropdown-container">
-        <select id="vstatus">
+        <select id="vstatus" disabled>
             <option value="0">Status</option>
             <option value="1">Onboarding</option>
             <option value="2">In Transit</option>
@@ -546,6 +546,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "13": "Antipolo"
     };
 
+    function updateDisplay() {
     // Get values from localStorage
     const status = localStorage.getItem("status");
     const train = localStorage.getItem("train");
@@ -563,6 +564,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("vtime").textContent = time || "Not Specified";
     document.getElementById("vdetails").textContent = details || "No Details Provided";
+    }
+    // Initialize the display
+    updateDisplay();
+
+    // Listen for storage changes
+    window.addEventListener("storage", function () {
+        updateDisplay();
+    });
 });
 
 function showPopup(message) {
