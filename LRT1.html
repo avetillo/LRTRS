@@ -316,14 +316,14 @@
                 if (nextIndex >= route.length) {
                     train.direction = 'forward'; // Reverse direction at the end of the route
                     nextIndex = route.length - 2;
-                    marker.setIcon(createCustomMarkerIcon('graphics/train-left.png')); // Change icon
+                    marker.setIcon(createCustomMarkerIcon('graphics/train-right.png')); // Change icon
                 }
             } else {
                 nextIndex = train.currentIndex - 1;
                 if (nextIndex < 0) {
                     train.direction = 'backward'; // Change direction at the start of the route
                     nextIndex = 1;
-                    marker.setIcon(createCustomMarkerIcon('graphics/train-right.png')); // Change icon
+                    marker.setIcon(createCustomMarkerIcon('graphics/train-left.png')); // Change icon
                 }
             }
 
