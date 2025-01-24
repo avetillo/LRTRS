@@ -12,32 +12,32 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo">
+        <div class="left-section">
             <img src="graphics/logo.png" alt="logo" class="background-image">
         </div>
-
-        <div class="h1-group">
-            <a href="index.html">
-                <i class="fa-solid fa-circle-chevron-left"></i>
-            </a>
-            <h1>ADMIN LOGIN</h1>
-        </div>
-
-        <div class="content">
-            <div class="form">
-                <form id="loginForm"> 
-                    <div class="input-group">
-                        <i class="fa fa-envelope"></i>
-                        <input type="email" id="email" name="email" placeholder="Email Address" required>
-                    </div>
-                    <div class="input-group">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="password" name="password" placeholder="Password  " required>
-                    </div>
-                    <div class="form-buttons">
-                        <button type="submit" id="login">LOGIN</button>
-                    </div>
-                </form>
+        <div class="right-section">
+            <div class="login-container">
+                <div class="title-group">
+                    <a href="index.html" class="redirect-button">
+                        <i class="fa-solid fa-circle-chevron-left"></i>
+                    </a>
+                    <h2 class="login-title">Admin Login</h2>    
+                </div>
+                <div class="form">
+                    <form id="loginForm"> 
+                        <div class="input-group">
+                            <i class="fa fa-envelope"></i>
+                            <input type="email" id="email" name="email" placeholder="Email Address" required>
+                        </div>
+                        <div class="input-group" style="margin-bottom: 20px;">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder="Password  " required>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" id="login">LOGIN</button>
+                        </div>
+                    </form>
+                </div> 
             </div>
         </div>
     </div>
