@@ -405,6 +405,7 @@
             // Optionally, reset the state or variables to prepare for the next journey
             currentStationMarker = null;
             destinationMarker = null;
+            focusedMarker = null;
                                 
                             }
                         } else if (train.direction === 'forward') {
@@ -426,6 +427,7 @@
             // Optionally, reset the state or variables to prepare for the next journey
             currentStationMarker = null;
             destinationMarker = null;
+            focusedMarker = null;
                                 ;
                             }
                         }
@@ -448,8 +450,52 @@
 // Start the marker animation along the route with a limit of 13 trains
 animateMarkerAlongRoute(stationCoordinates, 30); 
 
+//////////////////////////////////////////////////////////
+
+
+// Variables to hold the current station and destination markers
 var currentStationMarker = null;
 var destinationMarker = null;
+
+
+// Function to calculate the estimated time of completion
+function calculateCompletionTime(currentStation, destinationStation) {
+    // Calculate the distance between the two stations
+    const distance = getDistance(currentStation, destinationStation);  
+
+   
+    const averageSpeed = 30; // km/h
+
+    // Time = distance / speed (in hours)
+    const timeInHours = distance / averageSpeed;
+
+    // Convert time to minutes
+    const timeInMinutes = timeInHours * 60;
+
+    return timeInMinutes;
+}
+
+// Function to get the distance between two coordinates 
+function getDistance(currentCoordinates, destinationCoordinates) {
+    const lat1 = currentCoordinates[0];
+    const lon1 = currentCoordinates[1];
+    const lat2 = destinationCoordinates[0];
+    const lon2 = destinationCoordinates[1];
+
+    // Haversine formula to calculate the distance between two lat/lng points
+    const R = 6371; // Earth radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = R * c; // Distance in km
+    return distance;
+}
+
 
 // Event listener for "Current Station" change
 document.getElementById('station_from').addEventListener('change', function (event) {
@@ -482,6 +528,12 @@ document.getElementById('station_from').addEventListener('change', function (eve
 
             // Start the animation to the destination
             animateTrainToDestination(nearestTrain, station.coordinates, destination.coordinates);
+
+             // Calculate the estimated time of completion
+             const time = calculateCompletionTime(station.coordinates, destination.coordinates);
+            
+            // Display the estimated time of completion in minutes
+            document.getElementById("itime").textContent = time.toFixed(2) + " minutes";
         }
     }
 });
@@ -505,8 +557,16 @@ document.getElementById('station_to').addEventListener('change', function (event
 
         // Center the map on the destination station
         map.setView(station.coordinates, 14);
+
+        // Calculate the estimated time of completion
+        const currentStation = trainStations[parseInt(document.getElementById('station_from').value) - 1];
+        const time = calculateCompletionTime(currentStation.coordinates, station.coordinates);
+
+        // Display the estimated time of completion in minutes
+        document.getElementById("itime").textContent = time.toFixed(2) + " minutes";
     }
 });
+
 /////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function () {
     // Map of station indices to their names
