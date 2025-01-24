@@ -105,6 +105,7 @@
     <script>
         // Initialize the map
         var map = L.map('map').setView([14.5898, 120.9814], 13);
+        localStorage.setItem("LRT2trainStatuses", JSON.stringify([]));
 
         // Add the OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -182,11 +183,16 @@
         const details = document.getElementById("details").value;
 
         // Store values in localStorage
-        localStorage.setItem("status", status);
-        localStorage.setItem("train", train);
-        localStorage.setItem("station", station);
-        localStorage.setItem("time", time);
-        localStorage.setItem("details", details);
+        let existingStatusList = JSON.parse(localStorage.getItem("LRT2trainStatuses"));
+        const newTrainStatus = {
+            status: status,
+            train: train,
+            station: station,
+            time: time,
+            details: details
+        }; 
+        existingStatusList.push(newTrainStatus);
+        localStorage.setItem("LRT2trainStatuses", JSON.stringify(existingStatusList));
 
         alert("Status saved! Go to LRT2.html to view the details.");
     });
