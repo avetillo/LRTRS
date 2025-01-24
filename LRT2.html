@@ -573,10 +573,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateDisplay() {
     // Get values from localStorage
-    const status = localStorage.getItem("status");
-    const train = localStorage.getItem("train");
-    const time = localStorage.getItem("time");
-    const details = localStorage.getItem("details");
+    const status = localStorage.getItem("vstatus");
+    const train = localStorage.getItem("vtrain");
+    const time = localStorage.getItem("vtime");
+    const details = localStorage.getItem("vdetails");
 
     // Display values in the appropriate elements
     document.getElementById("vstatus").value = status || "0";

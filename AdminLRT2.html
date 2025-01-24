@@ -35,7 +35,7 @@
 
     <h1>ADMIN LRT 2 MAP</h1>
     <div class="dropdown-container">
-        <select id="status">
+        <select id="vstatus">
             <option value="0">Status</option>
             <option value="1">Onboarding</option>
             <option value="2">In Transit</option>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="dropdown-train">
-        <select id="trains">
+        <select id="vtrains">
             <option value="0">Train ID</option>
             <option value="1">Train 001</option>
             <option value="2">Train 002</option>
@@ -64,14 +64,14 @@
             <form id="loginForm"> 
                 <div class="input-group">
                     <i class="fa-solid fa-clock"></i>
-                    <input type="text" id="time" name="time" placeholder="Estimated time of arrival" >
+                    <input type="text" id="vtime" name="time" placeholder="Estimated time of arrival" >
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-pen"></i>
-                    <input type="text" id="details" name="details" placeholder="Details" >
+                    <input type="text" id="vdetails" name="details" placeholder="Details" >
                 </div>
                 <div class="form-buttons">
-                    <button type="submit" id="save">CHANGE STATUS</button>
+                    <button type="submit" id="vsave">CHANGE STATUS</button>
                 </div>
             </form>
         </div>
@@ -152,21 +152,21 @@
             });
         }
 
-    // Save data to localStorage when "CHANGE STATUS" is clicked
-    document.getElementById("save").addEventListener("click", function (e) {
+      // Save data to localStorage when "CHANGE STATUS" is clicked
+      document.getElementById("vsave").addEventListener("click", function (e) {
         e.preventDefault(); // Prevent form submission
 
         // Get values from the dropdowns and input fields
-        const status = document.getElementById("status").value;
-        const train = document.getElementById("trains").value;
-        const time = document.getElementById("time").value;
-        const details = document.getElementById("details").value;
+        const status = document.getElementById("vstatus").value;
+        const train = document.getElementById("vtrains").value;
+        const time = document.getElementById("vtime").value;
+        const details = document.getElementById("vdetails").value;
 
-        // Store values in localStorage
-        localStorage.setItem("status", status);
-        localStorage.setItem("train", train);
-        localStorage.setItem("time", time);
-        localStorage.setItem("details", details);
+                // Store values in localStorage
+        localStorage.setItem("vstatus", status);
+        localStorage.setItem("vtrain", train);
+        localStorage.setItem("vtime", time);
+        localStorage.setItem("vdetails", details);
         alert("Status saved! Go to LRT2.html to view the details.");
     });
 
