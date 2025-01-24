@@ -319,10 +319,9 @@ function animateMarkerAlongRoute(route, totalTrains) {
 
                     requestAnimationFrame(animateMarkerStep); // Continue animation
                 } else {
-                    updateTrainStatus(1);
                     marker.setLatLng(toLatLng); // Final position
                     train.currentIndex = nextIndex; // Update train's current station index
-                    
+
                     let currentStationIndex = route.findIndex(station => 
                         L.latLng(station).equals(currentStationMarker.getLatLng())
                     );
@@ -331,7 +330,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
                     );
 
                     // When the train stops at a station
-                     // Onboarding
+                    updateTrainStatus(1); // Onboarding
 
                     if (focusedMarker.getLatLng().equals(currentStationMarker.getLatLng())) {
                         if (train.direction === 'forward') {
