@@ -138,6 +138,7 @@
 
         // Define the train station locations
         var trainStations = [
+            { name: 'Spawn', coordinates: [14.603523749575908, 120.98195536668444] },
             { name: 'Recto', coordinates: [14.603523749575908, 120.98355536668444] },
             { name: 'Legarda', coordinates: [14.600866401813708, 120.99257584654309] },
             { name: 'Pureza', coordinates: [14.601761023215898, 121.00522612060541] },
@@ -150,12 +151,13 @@
             { name: 'Katipunan', coordinates: [14.631115349832555, 121.0725304965648] },
             { name: 'Santolan', coordinates: [14.622634836379207, 121.08577593223578] },
             { name: 'Marikina-Pasig', coordinates: [14.62042623132183, 121.1002720967416] },
-            { name: 'Antipolo', coordinates: [14.624951378644008, 121.12143178275615] }
+            { name: 'Antipolo', coordinates: [14.624951378644008, 121.12143178275615] },
+            { name: 'EndSpawn', coordinates: [14.624951378644008, 121.12443178275615] }
         ];
 
         // Add markers and draw the polyline
         var stationCoordinates = [];
-        trainStations.forEach(station => {
+        trainStations.slice(1, 14).forEach(station => {
             L.marker(station.coordinates, { icon: trainStationIcon })
                 .addTo(map)
                 .bindPopup(`<b>${station.name}</b>`);
@@ -483,7 +485,7 @@ function getDistance(currentCoordinates, destinationCoordinates) {
 
 // Event listener for "Current Station" change
 document.getElementById('station_from').addEventListener('change', function (event) {
-    const stationIndex = parseInt(event.target.value) - 1; // Subtract 1 to match array index
+    const stationIndex = parseInt(event.target.value); // Subtract 1 to match array index
     if (stationIndex >= 0) {
         const station = trainStations[stationIndex];
 
@@ -524,7 +526,7 @@ document.getElementById('station_from').addEventListener('change', function (eve
 
 // Event listener for "Destination Station" change
 document.getElementById('station_to').addEventListener('change', function (event) {
-    const stationIndex = parseInt(event.target.value) - 1; // Subtract 1 to match array index
+    const stationIndex = parseInt(event.target.value); // Subtract 1 to match array index
     if (stationIndex >= 0) {
         const station = trainStations[stationIndex];
 
