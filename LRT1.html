@@ -163,6 +163,7 @@
 
         // Define the train station locations
         var trainStations = [
+            { name: 'ForwardSpawn', coordinates: [14.656420, 121.027322] },
             { name: 'Fernando Poe Jr.', coordinates: [14.657564369471404, 121.02120610745072] },
             { name: 'Balintawak', coordinates: [14.65750147145765, 121.00422054654594] },
             { name: 'Monumento', coordinates: [14.6543704937643, 120.98394652823895] },
@@ -188,12 +189,13 @@
             { name: 'PITX', coordinates: [14.509302074860603, 120.99301525852232] },
             { name: 'Ninoy Aquino', coordinates: [14.499081395968531, 120.99443219828665] },
             { name: 'Dr Santos', coordinates: [14.48574205636304, 120.98946756415296] },
-
+            { name: 'BackwardSpawn', coordinates: [14.481641, 120.987790] },
+            
         ];
 
         // Add markers and draw the polyline
         var stationCoordinates = [];
-        trainStations.forEach(station => {
+        trainStations.slice(1, 26).forEach(station => {
             L.marker(station.coordinates, { icon: trainStationIcon })
                 .addTo(map)
                 .bindPopup(`<b>${station.name}</b>`);
@@ -518,7 +520,7 @@ function getDistance(currentCoordinates, destinationCoordinates) {
 
 // Event listener for "Current Station" change
 document.getElementById('station_from').addEventListener('change', function (event) {
-    const stationIndex = parseInt(event.target.value) - 1; // Subtract 1 to match array index
+    const stationIndex = parseInt(event.target.value); // Subtract 1 to match array index
     if (stationIndex >= 0) {
         const station = trainStations[stationIndex];
 
@@ -560,7 +562,7 @@ document.getElementById('station_from').addEventListener('change', function (eve
 
 // Event listener for "Destination Station" change
 document.getElementById('station_to').addEventListener('change', function (event) {
-    const stationIndex = parseInt(event.target.value) - 1; // Subtract 1 to match array index
+    const stationIndex = parseInt(event.target.value); // Subtract 1 to match array index
     if (stationIndex >= 0) {
         const station = trainStations[stationIndex];
 
