@@ -35,7 +35,7 @@
 
     <h1>LRT 1 ROUTE MAP</h1>
     <div class="dropdown-container">
-        <select id="istatus" disabled>
+        <select id="istatus">
             <option value="0">Status</option>
             <option value="1">Onboarding</option>
             <option value="2">In Transit</option>
@@ -228,15 +228,15 @@
 
 
     
-    ///////////////////////////////////
+///////////////////////////////////////////////////////////
     function animateMarkerAlongRoute(route, totalTrains) {
     const markers = [];
     const trainData = [];
     let trainCount = 0; // Counter for added trains
     const trainNames = []; // Store train names for reference
     let focusedMarker = null; // Track the clicked marker for focus
-
-    // Function to update the train status dropdown
+    let isUnderMaintenance = false;
+    let emergencyStop = false;
 
     //Center Train Focused View
     map.on('moveend', () => {
@@ -245,10 +245,36 @@
                 }
             });
 
-    function updateTrainStatus(status) {
+     // Function to update train status dropdown
+     function updateTrainStatus(status) {
         const statusDropdown = document.getElementById('istatus');
-        if (statusDropdown) statusDropdown.value = status;
+        if (statusDropdown && status !== 4) {
+            statusDropdown.value = status;
+        }
     }
+
+    // Event listener for train status dropdown
+    document.getElementById('istatus').addEventListener('change', function () {
+        const currentStatus = parseInt(this.value);
+        switch (currentStatus) {
+            case 1: // Normal speed
+                isUnderMaintenance = false;
+                emergencyStop = false;
+                console.log("Train resumed normal speed.");
+                break;
+            case 4: // Slow speed (maintenance)
+                isUnderMaintenance = true;
+                emergencyStop = false;
+                console.log("Train slowed down for maintenance.");
+                break;
+            case 5: // Emergency stop
+                emergencyStop = true;
+                console.log("Emergency stop activated.");
+                break;
+            default:
+                console.warn("Unknown status selected. No changes applied.");
+        }
+    });
 
     // Function to add a train marker
     function addTrain() {
@@ -289,29 +315,17 @@
     // Start adding the first train after a 2-second delay
     setTimeout(startTrainWithInterval, 2000);
 
-    // Function to move all train markers along the route
-    function moveAlongPath() {
-        const statusDropdown = document.getElementById('istatus');
-
-        // If the dropdown doesn't exist, return early
-        if (!statusDropdown) return;
-
-        // Check the current status value
-        const currentStatus = parseInt(statusDropdown.value);
-
-         // If the status is 5 (Emergency Stop), stop all trains
-         if (currentStatus === 5) {
-            console.log("Trains stopped due to Emergency Stop.");
-            setTimeout(moveAlongPath, 1000); // Recheck after 1 second
-            return;
-        }
-
-
-        // Resume train movement when status is not 5
+// Function to move all train markers along the route
+function moveAlongPath() {
         markers.forEach((marker, trainIndex) => {
             const train = trainData[trainIndex];
             const currentStation = route[train.currentIndex];
             let nextIndex;
+
+            if (emergencyStop) {
+                console.log("Emergency stop triggered. All trains stopped.");
+                return;
+            }
 
             // Determine next station index based on direction
             if (train.direction === 'backward') {
@@ -334,12 +348,18 @@
             const fromLatLng = L.latLng(currentStation);
             const toLatLng = L.latLng(nextStation);
 
-            const duration = 2000; // Movement duration in ms
+            const duration = isUnderMaintenance ? 8000 : 2000;
             let startTime = null;
 
             // Animate the marker's movement
             function animateMarkerStep(timestamp) {
                 if (!startTime) startTime = timestamp;
+
+                if (emergencyStop) {
+                    console.log("Animation stopped due to emergency stop.");
+                    return;
+                }
+
                 const progress = (timestamp - startTime) / duration;
 
                 if (progress < 1) {
@@ -354,11 +374,16 @@
                         updateTrainStatus(2); // In Transit
                     }
 
-                    requestAnimationFrame(animateMarkerStep); // Continue animation
+                 requestAnimationFrame(animateMarkerStep);
                 } else {
-                    updateTrainStatus(1);
-                    marker.setLatLng(toLatLng); // Final position
-                    train.currentIndex = nextIndex; // Update train's current station index
+                    marker.setLatLng(toLatLng);
+                    train.currentIndex = nextIndex;
+
+                    if (!isUnderMaintenance) {
+                        updateTrainStatus(1); // Onboarding
+                        train.isOnboarding = true;
+                    }
+                    
                     
                     let currentStationIndex = route.findIndex(station => 
                         L.latLng(station).equals(currentStationMarker.getLatLng())
@@ -366,9 +391,6 @@
                     let destinationStationIndex = route.findIndex(station => 
                         L.latLng(station).equals(destinationMarker.getLatLng())
                     );
-
-                    // When the train stops at a station
-                     // Onboarding
 
                     if (focusedMarker.getLatLng().equals(currentStationMarker.getLatLng())) {
                         if (train.direction === 'backward') {
@@ -390,21 +412,22 @@
                             if (currentStationIndex < destinationStationIndex) {
                                 showPopup("Train has reached the destination");
                                             // Automatically remove the current and destination markers
-            if (currentStationMarker) {
-                map.removeLayer(currentStationMarker);
-            }
-            if (destinationMarker) {
-                map.removeLayer(destinationMarker);
-            }
+                                                if (currentStationMarker) {
+                                                    map.removeLayer(currentStationMarker);
+                                                }
+                                                if (destinationMarker) {
+                                                    map.removeLayer(destinationMarker);
+                                                }
 
-            // Reset the dropdowns to index 0 (reset to initial state)
-            document.getElementById('station_from').selectedIndex = 0;
-            document.getElementById('station_to').selectedIndex = 0;
+                                                // Reset the dropdowns to index 0 (reset to initial state)
+                                                document.getElementById('station_from').selectedIndex = 0;
+                                                document.getElementById('station_to').selectedIndex = 0;
 
-            // Optionally, reset the state or variables to prepare for the next journey
-            currentStationMarker = null;
-            destinationMarker = null;
-            focusedMarker = null;
+                                                // Reset the state or variables to prepare for the next journey
+                                                currentStationMarker = null;
+                                                destinationMarker = null;
+                                                focusedMarker = null;
+                                                document.getElementById("itime").textContent = time || "Not Specified";
                                 
                             }
                         } else if (train.direction === 'forward') {
@@ -419,15 +442,15 @@
                                     map.removeLayer(destinationMarker);
                                 }
 
-            // Reset the dropdowns to index 0 (reset to initial state)
-            document.getElementById('station_from').selectedIndex = 0;
-            document.getElementById('station_to').selectedIndex = 0;
+                                // Reset the dropdowns to index 0 (reset to initial state)
+                                document.getElementById('station_from').selectedIndex = 0;
+                                document.getElementById('station_to').selectedIndex = 0;
 
-            // Optionally, reset the state or variables to prepare for the next journey
-            currentStationMarker = null;
-            destinationMarker = null;
-            focusedMarker = null;
-                                ;
+                                // Reset the state or variables to prepare for the next journey
+                                currentStationMarker = null;
+                                destinationMarker = null;
+                                focusedMarker = null;
+                                document.getElementById("itime").textContent = time || "Not Specified";
                             }
                         }
                     }
@@ -438,30 +461,18 @@
             requestAnimationFrame(animateMarkerStep);
         });
 
-        if (currentStatus == 4){
-            // continue moving trains but in a much slower speed
-            // resulting an effect where everything is slow due to a train being under maintenance
-            console.log('Debug Mode: Train under maintenance, so trains are very SLOW!');
-            
-            setTimeout(moveAlongPath, 14000); // Recheck after 14 seconds
-        }
-        else {
-            // Continue moving trains in a normal speed
-            setTimeout(moveAlongPath, 5000); // Recheck after 5 seconds
-            console.log('Debug Mode: No issues with trains, all trains in normal speed!');
+        if (!emergencyStop) {
+            setTimeout(moveAlongPath, 9000);
         }
     }
 
-    // Start moving trains along the path
     moveAlongPath();
 }
 
-// Start the marker animation along the route with a limit of 13 trains
-animateMarkerAlongRoute(stationCoordinates, 30); 
+// Start the marker animation along the route with a limit of 8 trains
+animateMarkerAlongRoute(stationCoordinates, 30);
 
 //////////////////////////////////////////////////////////
-
-
 // Variables to hold the current station and destination markers
 var currentStationMarker = null;
 var destinationMarker = null;
@@ -530,6 +541,7 @@ document.getElementById('station_from').addEventListener('change', function (eve
 
         // If a nearest train is found, animate it towards the destination
         if (nearestTrain) {
+            
             // Get the destination station from the dropdown
             const destinationIndex = parseInt(document.getElementById('station_to').value) - 1;
             const destination = trainStations[destinationIndex];
@@ -616,7 +628,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Display values in the appropriate elements
         document.getElementById("istatus").value = status || "0";
         document.getElementById("itrain").textContent = train !== "0" ? `Train ${train}` : "No Train Selected";
-
         document.getElementById("itime").textContent = time || "Not Specified";
         document.getElementById("idetails").textContent = details || "No Details Provided";
     }
@@ -660,7 +671,7 @@ function showPopup(message, colorOptions = {}) {
     }, 3000); // Popup stays for 3 seconds
 }
 
-    </script>
+</script>
 </body>
 
 </html>

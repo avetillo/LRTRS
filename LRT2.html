@@ -337,7 +337,8 @@ function animateMarkerAlongRoute(route, totalTrains) {
                     } else if (progress < 0.5) {
                         updateTrainStatus(2); // In Transit
                     }
-  requestAnimationFrame(animateMarkerStep);
+
+                requestAnimationFrame(animateMarkerStep);
                 } else {
                     marker.setLatLng(toLatLng);
                     train.currentIndex = nextIndex;
@@ -353,7 +354,6 @@ function animateMarkerAlongRoute(route, totalTrains) {
                     let destinationStationIndex = route.findIndex(station => 
                         L.latLng(station).equals(destinationMarker.getLatLng())
                     );
-
 
                     if (focusedMarker.getLatLng().equals(currentStationMarker.getLatLng())) {
                         if (train.direction === 'forward') {
@@ -391,6 +391,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
                                             destinationMarker = null;
                                             focusedMarker = null;
                                             time = null;
+                                            document.getElementById("vtime").textContent = time || "Not Specified";
                                 
                             }
                         } else if (train.direction === 'backward') {
@@ -413,6 +414,7 @@ function animateMarkerAlongRoute(route, totalTrains) {
                                         currentStationMarker = null;
                                         destinationMarker = null;
                                         focusedMarker = null;
+                                        document.getElementById("vtime").textContent = time || "Not Specified";
                             }
                         }
                     }
@@ -590,6 +592,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateDisplay();
     });
 });
+
 ////////////////////////////////////////////
 function showPopup(message, colorOptions = {}) {
     const popup = document.getElementById('popup');
@@ -621,5 +624,4 @@ function showPopup(message, colorOptions = {}) {
 }
 </script>
 </body>
-
 </html>
