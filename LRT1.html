@@ -230,7 +230,7 @@
 
 
     
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////FSM
     function animateMarkerAlongRoute(route, totalTrains) {
     const markers = [];
     const trainData = [];
@@ -324,10 +324,23 @@ function moveAlongPath() {
             const currentStation = route[train.currentIndex];
             let nextIndex;
 
+            
             if (emergencyStop) {
-                console.log("Emergency stop triggered. All trains stopped.");
-                return;
-            }
+                    showPopup("Emergency stop triggered. All trains stopped.");
+                    updateTrainStatus(5); // Set status to Emergency Stop
+
+            // Periodically check if the emergency stop is cleared
+            const checkEmergencyStopInterval = setInterval(() => {
+                if (!emergencyStop) {
+                    clearInterval(checkEmergencyStopInterval); // Stop checking
+                    showPopup("Emergency stop cleared. Resuming trains.");
+                    updateTrainStatus(2); // Set status to In Transit
+                    moveAlongPath(); // Resume the function
+                }
+            }, 1000); // Check every second
+
+            return; // Exit the current function until emergency stop is cleared
+        }
 
             // Determine next station index based on direction
             if (train.direction === 'backward') {
@@ -358,9 +371,28 @@ function moveAlongPath() {
                 if (!startTime) startTime = timestamp;
 
                 if (emergencyStop) {
-                    console.log("Animation stopped due to emergency stop.");
-                    return;
-                }
+                        showPopup("All trains stopped.");
+                        updateTrainStatus(5); // Set status to Emergency Stop
+                        return; // Exit the function and wait for the next trigger
+                    }
+
+                    // Function to resume movement if emergency stop is cleared
+                    function resumeIfCleared() {
+                        if (!emergencyStop) {
+                            showPopup("Emergency stop cleared. Resuming trains.");
+                            updateTrainStatus(1); // Set status to Onboarding
+                            moveAlongPath(); // Resume the movement
+                        } else {
+                            // If emergencyStop is still active, do nothing until the function is re-triggered
+                            showPopup("Emergency stop still active. Awaiting clearance.");
+                        }
+                    }
+
+                    function handleEmergencyClear() {
+                        emergencyStop = false; // Simulate clearing the emergency stop
+                        resumeIfCleared();
+                    }
+
 
                 const progress = (timestamp - startTime) / duration;
 
