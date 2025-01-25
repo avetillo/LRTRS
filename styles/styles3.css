@@ -14,8 +14,8 @@
             position: absolute;
             transform: translate(-50%, -50%);
             text-align: center;
-            top: 25%;
-            left: 85%;
+            top: 30%;
+            left: 85.5%;
             width: 250px;
             
         }
@@ -115,7 +115,7 @@
         .dropdown-container {
             position: absolute;
             top: 40%;
-            left: 85%;
+            left: 85.5%;
             transform: translate(-50%, -50%);
             text-align: center;
         }
@@ -134,15 +134,15 @@
         .dropdown-station {
             position: absolute;
             top: 40%;
-            left: 85%;
+            left: 85.5%;
             transform: translate(-50%, -50%);
             text-align: center;
         }
 
         .dropdown-train {
             position: absolute;
-            top: 50%;
-            left: 85%;
+            top: 48%;
+            left: 85.5%;
             transform: translate(-50%, -50%);
             text-align: center;
         }
@@ -161,7 +161,7 @@
         
         .input-group .fa-clock {
             position: absolute;
-            top: 50%;
+            top: 49%;
             left: 10px;
             transform: translateY(-50%);
             color: #232D3F;
@@ -171,7 +171,7 @@
         
         .input-group .fa-pen {
             position: absolute;
-            top: 50%;
+            top: 49%;
             left: 10px;
             transform: translateY(-50%);
             color: #232D3F;
@@ -196,20 +196,20 @@
             max-width: 171px;
             color: white;
             text-align: left;
-            margin-left: 75.2%;
-            margin-top: 25%;
+            margin-left: 85.5%;
+            margin-top: 23%;
         }
         
         .form input {
             font-family: Arial;
             padding: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 17px;
             border-radius: 5px;
             padding-left: 50px;
             border: 3px solid #ccc;
             font-size: 13px;
             box-sizing: border-box;
-            margin-right: 8%;
+            margin-right: 10%;
         }
         
         .form-buttons {
@@ -241,15 +241,15 @@
             background-color: #03C03C;
             color: #232D3F;
             border: none;
-            padding: 10px 30px;
-            font-size: 13px;
-            margin: 10px 0;
+            padding: 15px 30px;
+            font-size: 15px;
+            margin: 2px 0;
             cursor: pointer;
             border-radius: 5px;
             font-weight: bold;
             transition: background-color 0.3s, color 0.3s;
             box-sizing: border-box;
-            width: 245px;
+            width: 248px;
         }
 
         .buttons button:hover, .nav-button:hover, .form-buttons button:hover {
